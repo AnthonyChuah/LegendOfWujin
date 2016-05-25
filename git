@@ -1,0 +1,448 @@
+[33mcommit 22de9bfc495461789b066cac8df429c243ffa96c[m
+Author: Anton Chuah <anthony.w.chuah@gmail.com>
+Date:   Wed May 25 08:26:45 2016 +0100
+
+    Creation of repository
+
+[1mdiff --git a/game.py b/game.py[m
+[1mnew file mode 100644[m
+[1mindex 0000000..55f0f91[m
+[1m--- /dev/null[m
+[1m+++ b/game.py[m
+[36m@@ -0,0 +1,211 @@[m
+[32m+[m[32mimport random[m
+[32m+[m[32mimport math[m
+[32m+[m[32mimport sys[m
+[32m+[m
+[32m+[m[32m# Strength str affects melee damage and allows wearing heavier armour.[m
+[32m+[m[32m# Dexterity dex affects success rate of fleeing and allows learning skills.[m
+[32m+[m[32m# Intelligence int affects spell power and allows learning spells.[m
+[32m+[m[32m# Hitpoints hp is your life: once it hits 0 or below you are dead.[m
+[32m+[m[32m# Stamina sta is used to perform skills.[m
+[32m+[m[32m# Mind mn is used for casting spells.[m
+[32m+[m[32m# Experience exp counts progress towards gaining levels.[m
+[32m+[m[32m# Level shows character level.[m
+[32m+[m[32m# To-next-level tnl shows how much exp is needed to gain the next level.[m
+[32m+[m[32m# Tnl = level * 10.[m
+[32m+[m[32mattributes = {[m
+[32m+[m[32m  "str": 10,[m
+[32m+[m[32m  "dex": 10,[m
+[32m+[m[32m  "int": 10,[m
+[32m+[m[32m  "maxhp": 50,[m
+[32m+[m[32m  "maxsta": 40,[m
+[32m+[m[32m  "maxmn": 40,[m
+[32m+[m[32m  "exp": 0,[m
+[32m+[m[32m  "level": 1,[m
+[32m+[m[32m  "tnl": 10[m
+[32m+[m[32m}[m
+[32m+[m[32mlevelincrease = {[m
+[32m+[m[32m  "str": 2,[m
+[32m+[m[32m  "dex": 2,[m
+[32m+[m[32m  "int": 2,[m
+[32m+[m[32m  "maxhp": 10,[m
+[32m+[m[32m  "maxsta": 8,[m
+[32m+[m[32m  "maxmn": 8[m
+[32m+[m[32m}[m
+[32m+[m[32m# There are 6 equipment slots.[m
+[32m+[m[32mequipment = {[m
+[32m+[m[32m  "mainhand": "knife",[m
+[32m+[m[32m  "offhand": None,[m
+[32m+[m[32m  "body": "cloth tunic",[m
+[32m+[m[32m  "legs": "cloth trousers",[m
+[32m+[m[32m  "feet": "sandals",[m
+[32m+[m[32m  "hands": None[m
+[32m+[m[32m}[m
+[32m+[m[32mgold = 50[m
+[32m+[m[32m# Inventory space is unlimited.[m
+[32m+[m[32minventory = [[m
+[32m+[m[32m  "cloth gloves",[m
+[32m+[m[32m  "wooden buckler"[m
+[32m+[m[32m][m
+[32m+[m[32mprint(attributes)[m
+[32m+[m[32mprint(levelincrease)[m
+[32m+[m[32mprint(equipment)[m
+[32m+[m[32mprint(gold)[m
+[32m+[m[32mprint(inventory)[m
+[32m+[m
+[32m+[m[32msys.exit()[m
+[32m+[m
+[32m+[m[32mitemstats = dict()[m
+[32m+[m[32m# Weapon stats [x,y,z] indicates: damage of xDy where x is number of dice,[m[41m [m
+[32m+[m[32m# and y is the faces on each die; and cost of z gold.[m[41m [m
+[32m+[m[32m# Each die's outcome is a discrete uniform distribution over[m[41m [m
+[32m+[m[32m# the range 1 to y.[m[41m [m
+[32m+[m[32mitemstats["weapon"] = {[m
+[32m+[m[32m  "knife":[1,3,25],[m
+[32m+[m[32m  "dagger":[1,4,40],[m
+[32m+[m[32m  "hammer":[2,2,55],[m
+[32m+[m[32m  "hatchet":[1,6,70],[m
+[32m+[m[32m  "butterfly-sword":[2,3,90],[m
+[32m+[m[32m  "axe":[1,8,105],[m
+[32m+[m[32m  "da-dao":[1,9,115],[m
+[32m+[m[32m  "jian":[2,4,140],[m
+[32m+[m[32m  "meteor-hammer":[3,2,140][m
+[32m+[m[32m}[m
+[32m+[m[32m# Shields offer blockvalue, which increase the probability of blocking.[m[41m [m
+[32m+[m[32m# Blocking consumes stamina.[m[41m [m
+[32m+[m[32m# If enemy attack value is greater than double the blockvalue, the[m[41m [m
+[32m+[m[32m# shield breaks completely.[m[41m [m
+[32m+[m[32m# [x,z] where x is blockvalue and z is cost.[m[41m [m
+[32m+[m[32mitemstats["shield"] = {[m
+[32m+[m[32m  "wooden buckler":[5,25],[m
+[32m+[m[32m  "bronze buckler":[7,35],[m
+[32m+[m[32m  "wooden shield":[8,40],[m
+[32m+[m[32m  "iron buckler":[9,48],[m
+[32m+[m[32m  "bronze shield":[10,55],[m
+[32m+[m[32m  "steel buckler":[12,80],[m
+[32m+[m[32m  "iron shield":[13,90],[m
+[32m+[m[32m  "steel shield":[15,115][m
+[32m+[m[32m}[m
+[32m+[m[32m# Armour has a slot (feet, body, etc.) and armour value.[m[41m [m
+[32m+[m[32m# [x,y,z] where x is slot, y is armour value, and z is cost.[m[41m [m
+[32m+[m[32mitemstats["armour"] = {[m
+[32m+[m[32m  "cloth tunic":["body",3,30],[m
+[32m+[m[32m  "leather jerkin":["body",4,40],[m
+[32m+[m[32m  "ring mail shirt":["body",5,55],[m
+[32m+[m[32m  "chain mail shirt":["body",6,70],[m
+[32m+[m[32m  "light breastplate":["body",7,85],[m
+[32m+[m[32m  "heavy breastplate":["body",8,100],[m
+[32m+[m[32m  "cloth trousers":["legs",2,20],[m
+[32m+[m[32m  "leather leggings":["legs",3,30],[m
+[32m+[m[32m  "mail leggings":["legs",4,40],[m
+[32m+[m[32m  "plate leggings":["legs",5,55],[m
+[32m+[m[32m  "sandals":["feet",1,8],[m
+[32m+[m[32m  "shoes":["feet",2,18],[m
+[32m+[m[32m  "boots":["feet",3,30],[m
+[32m+[m[32m  "reinforced steel boots":["feet",4,40],[m
+[32m+[m[32m  "cloth gloves":["hands",1,8],[m
+[32m+[m[32m  "leather gloves":["hands",2,18],[m
+[32m+[m[32m  "heavy leather gauntlets":["hands",3,30],[m
+[32m+[m[32m  "mail gauntlets":["hands",4,40][m
+[32m+[m[32m}[m
+[32m+[m[32mitemstats_flat = dict()[m
+[32m+[m[32mfor itemtype in itemstats:[m
+[32m+[m[32m  # Each itemtype will be itemstats["weapon"] etc.[m[41m [m
+[32m+[m[32m  # itemtype is itself a dict nested inside the itemstats dict.[m[41m [m
+[32m+[m[32m  for item in itemtype:[m
+[32m+[m[32m    # Each item is "cloth tunic" for example, and its lookup value is[m[41m [m
+[32m+[m[32m    # ["body",3,30] for example.[m[41m [m
+[32m+[m[32m    itemstats_flat[item] = itemtype[item][m
+[32m+[m
+[32m+[m[32mprint(itemstats)[m
+[32m+[m[32mprint(itemstats_flat)[m
+[32m+[m[32msys.exit()[m
+[32m+[m
+[32m+[m[32mskilldesc = {[m
+[32m+[m[32m  "atk":"attack with a balance of offence and defence; 1 stamina",[m
+[32m+[m[32m  "def":"attack defensively; 1 stamina",[m
+[32m+[m[32m  "str":"attack offensively; 1 stamina",[m
+[32m+[m[32m  "shatter":"attacks with normal offence but ignores enemy defence; 4 stamina",[m
+[32m+[m[32m  "bash":"has chance of denying opponent's attack and attacks with normal offence; 4 stamina; chance scales with str",[m
+[32m+[m[32m  "sunder":"attacks with low offence and reduces enemy defence; 5 stamina; reduction scales with dex",[m
+[32m+[m[32m  "weaken":"attacks with low offence and reduces enemy offence; 5 stamina; reduction scales with dex",[m
+[32m+[m[32m  "charge":"attacks with high offence dealing more damage if enemy hp is high; 5 stamina; scales with str",[m
+[32m+[m[32m  "flurry":"attacks 2 to 4 times; 8 stamina, scales with the sum of str and dex"[m
+[32m+[m[32m}[m
+[32m+[m[32mspelldesc = {[m
+[32m+[m[32m  "mm":"magic missile deals low damage; costs 1 mind; combat only",[m
+[32m+[m[32m  "heal":"heals 10 hp; costs 2 mind",[m
+[32m+[m[32m  "refresh":"restores 10 stamina; costs 3 mind",[m
+[32m+[m[32m  "barrier":"increases defence; 4 mind; fades after combat",[m
+[32m+[m[32m  "enfeeble":"decreases enemy offence; 4 mind; combat only"[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m
+[32m+[m
+[32m+[m[32mcommands = {[m
+[32m+[m[32m  "north":"go north",[m
+[32m+[m[32m  "south":"go south",[m
+[32m+[m[32m  "east":"go east",[m
+[32m+[m[32m  "west":"go west",[m
+[32m+[m[32m  "quit":"quit the game",[m
+[32m+[m[32m  "shop":"buy or sell items",[m
+[32m+[m[32m  "learn":"learn spells",[m
+[32m+[m[32m  "train":"train in skills, only in town",[m
+[32m+[m[32m  "rest":"rest; more effective in town",[m
+[32m+[m[32m  "inv":"display inventory",[m
+[32m+[m[32m  "eq":"display equipment",[m
+[32m+[m[32m  "hunt":"look for an enemy to fight",[m
+[32m+[m[32m  "cast [spell]":"cast [spell] from your spellbook",[m
+[32m+[m[32m  "skill [skill]":"perform [skill]",[m
+[32m+[m[32m  "flee":"flee from a fight",[m
+[32m+[m[32m  "wear [item]":"equip [item]",[m
+[32m+[m[32m  "look":"looks at your current room"[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mclass Creature(object):[m
+[32m+[m[32m  def __init__(self):[m
+[32m+[m[32m    self.name = ""[m
+[32m+[m
+[32m+[m[32mclass Mob(object):[m
+[32m+[m[32m  def __init__(self,name,hp,defence,attack,expgiven):[m
+[32m+[m[32m    self.name = name[m
+[32m+[m[32m    self.hp = hp[m
+[32m+[m[32m    self.defence = defence[m
+[32m+[m[32m    self.attack = attack[m
+[32m+[m[32m    self.expgiven = expgiven[m
+[32m+[m
+[32m+[m[32mclass Player(object):[m
+[32m+[m[32m  def __init__(self):[m
+[32m+[m[32m    Creature.__init__(self)[m
+[32m+[m[32m    self.state = "normal"[m
+[32m+[m[32m    self.stats = attributes[m
+[32m+[m[32m    self.hp = attributes.get("maxhp")[m
+[32m+[m[32m    self.stamina = attributes.get("maxsta")[m
+[32m+[m[32m    self.mind = attributes.get("maxmind")[m
+[32m+[m[32m    self.room = "Town"[m
+[32m+[m[32m    self.inventory = [[m
+[32m+[m[32m      "thin gloves",[m
+[32m+[m[32m      "wooden buckler"[m
+[32m+[m[32m    ][m
+[32m+[m[32m  def quit(self):[m
+[32m+[m[32m    print("You give up on your life and commit suicide.")[m
+[32m+[m[32m    self.hp = 0[m
+[32m+[m[32m  def help(self):[m
+[32m+[m[32m    print(commands)[m
+[32m+[m
+[32m+[m[32mclass Item(object):[m
+[32m+[m[32m  def __init__(self,name,desc,cost):[m
+[32m+[m[32m    self.name = name[m
+[32m+[m[32m    self.desc = desc[m
+[32m+[m[32m    self.cost = cost[m
+[32m+[m
+[32m+[m[32mclass Weapon(object):[m
+[32m+[m[32m  def __init__(self,name,desc,cost,mindmg,maxdmg):[m
+[32m+[m[32m    Item.__init__(self,name,desc,cost)[m
+[32m+[m[32m    self.mindmg = mindmg[m
+[32m+[m[32m    self.maxdmg = maxdmg[m
+[32m+[m
+[32m+[m[32m# Armour has deflection value which adds to defence.[m[41m [m
+[32m+[m[32mclass Armour(object):[m
+[32m+[m[32m  def __init__(self,name,desc,cost,slot,deflect):[m
+[32m+[m[32m    Item.__init__(self,name,desc,cost)[m
+[32m+[m[32m    self.deflect = itemstats["armour"][name][2][m
+[1mdiff --git a/itemstats.py b/itemstats.py[m
+[1mnew file mode 100644[m
+[1mindex 0000000..e6028cc[m
+[1m--- /dev/null[m
+[1m+++ b/itemstats.py[m
+[36m@@ -0,0 +1,54 @@[m
+[32m+[m[32m# itemstats.py[m
+[32m+[m[32mitemstats = dict()[m
+[32m+[m[32m# Weapon stats [x,y,z] indicates: damage of xDy where x is number of dice,[m[41m [m
+[32m+[m[32m# and y is the faces on each die; and cost of z gold.[m[41m [m
+[32m+[m[32m# Each die's outcome is a discrete uniform distribution over[m[41m [m
+[32m+[m[32m# the range 1 to y.[m[41m [m
+[32m+[m[32mitemstats["weapons"] = {[m
+[32m+[m[32m  "knife":[1,3,25],[m
+[32m+[m[32m  "dagger":[1,4,40],[m
+[32m+[m[32m  "hammer":[2,2,55],[m
+[32m+[m[32m  "hatchet":[1,6,70],[m
+[32m+[m[32m  "butterfly-sword":[2,3,90],[m
+[32m+[m[32m  "axe":[1,8,105],[m
+[32m+[m[32m  "da-dao":[1,9,115],[m
+[32m+[m[32m  "jian":[2,4,140],[m
+[32m+[m[32m  "meteor-hammer":[3,2,140][m
+[32m+[m[32m}[m
+[32m+[m[32m# Shields offer blockvalue, which increase the probability of blocking.[m[41m [m
+[32m+[m[32m# Blocking consumes stamina.[m[41m [m
+[32m+[m[32m# If enemy attack value is greater than double the blockvalue, the[m[41m [m
+[32m+[m[32m# shield breaks completely.[m[41m [m
+[32m+[m[32m# [x,z] where x is blockvalue and z is cost.[m[41m [m
+[32m+[m[32mitemlist["shields"] = {[m
+[32m+[m[32m  "wooden buckler":[5,25],[m
+[32m+[m[32m  "bronze buckler":[7,35],[m
+[32m+[m[32m  "wooden shield":[8,40],[m
+[32m+[m[32m  "iron buckler":[9,48],[m
+[32m+[m[32m  "bronze shield":[10,55],[m
+[32m+[m[32m  "steel buckler":[12,80],[m
+[32m+[m[32m  "iron shield":[13,90],[m
+[32m+[m[32m  "steel shield":[15,115][m
+[32m+[m[32m}[m
+[32m+[m[32m# Armour has a slot (feet, body, etc.) and armour value.[m[41m [m
+[32m+[m[32m# [x,y,z] where x is slot, y is armour value, and z is cost.[m[41m [m
+[32m+[m[32mitemlist["armour"] = {[m
+[32m+[m[32m  "cloth tunic":["body",3,30],[m
+[32m+[m[32m  "leather jerkin":["body",4,40],[m
+[32m+[m[32m  "ring mail shirt":["body",5,55],[m
+[32m+[m[32m  "chain mail shirt":["body",6,70],[m
+[32m+[m[32m  "light breastplate":["body",7,85],[m
+[32m+[m[32m  "heavy breastplate":["body",8,100],[m
+[32m+[m[32m  "cloth trousers":["legs",2,20],[m
+[32m+[m[32m  "leather leggings":["legs",3,30],[m
+[32m+[m[32m  "mail leggings":["legs",4,40],[m
+[32m+[m[32m  "plate leggings":["legs",5,55],[m
+[32m+[m[32m  "sandals":["feet",1,8],[m
+[32m+[m[32m  "shoes":["feet",2,18],[m
+[32m+[m[32m  "boots":["feet",3,30],[m
+[32m+[m[32m  "reinforced steel boots":["feet",4,40],[m
+[32m+[m[32m  "cloth gloves":["hands",1,8],[m
+[32m+[m[32m  "leather gloves":["hands",2,18],[m
+[32m+[m[32m  "heavy leather gauntlets":["hands",3,30],[m
+[32m+[m[32m  "mail gauntlets":["hands",4,40][m
+[32m+[m[32m}[m
+\ No newline at end of file[m
+[1mdiff --git a/readme.txt b/readme.txt[m
+[1mnew file mode 100644[m
+[1mindex 0000000..69c5aa1[m
+[1m--- /dev/null[m
+[1m+++ b/readme.txt[m
+[36m@@ -0,0 +1,23 @@[m
+[32m+[m[32mText-based role-playing adventure[m
+[32m+[m
+[32m+[m
+[32m+[m[32mWorld should consist of 5 rooms with one central connecting room.[m[41m [m
+[32m+[m[32mFrom central room (Town) you can go [north south east west] to zones.[m[41m [m
+[32m+[m
+[32m+[m
+[32m+[m[32mProgram Classes:[m[41m [m
+[32m+[m
+[32m+[m[32m* Character, Mob[m
+[32m+[m[32m* Item, Weapon, Armour, Shield[m
+[32m+[m[32m* Room, Town (special Room)[m
+[32m+[m
+[32m+[m[32mFunctions:[m[41m [m
+[32m+[m
+[32m+[m[32m* Hunt - reference Room to lookup monster[m
+[32m+[m[32m* Generally, all character commands![m[41m [m
+[32m+[m[32m* Also Fighting function.[m[41m [m
+[32m+[m
+[32m+[m
+[32m+[m[32mNote:[m[41m [m
+[32m+[m
+[32m+[m[32m* Python DOES NOT DO LAZY EVALUATION. Therefore in class creation, for Room please define all attributes that Town should have.[m[41m [m
+\ No newline at end of file[m
+[1mdiff --git a/reference.py b/reference.py[m
+[1mnew file mode 100644[m
+[1mindex 0000000..d855a57[m
+[1m--- /dev/null[m
+[1m+++ b/reference.py[m
+[36m@@ -0,0 +1,106 @@[m
+[32m+[m[32mfrom random import randint[m
+[32m+[m
+[32m+[m[32mclass Character:[m
+[32m+[m[32m  def __init__(self):[m
+[32m+[m[32m    self.name = ""[m
+[32m+[m[32m    self.health = 1[m
+[32m+[m[32m    self.health_max = 1[m
+[32m+[m[32m  def do_damage(self, enemy):[m
+[32m+[m[32m    damage = min([m
+[32m+[m[32m        max(randint(0, self.health) - randint(0, enemy.health), 0),[m
+[32m+[m[32m        enemy.health)[m
+[32m+[m[32m    enemy.health = enemy.health - damage[m
+[32m+[m[32m    if damage == 0: print "%s evades %s's attack." % (enemy.name, self.name)[m
+[32m+[m[32m    else: print "%s hurts %s!" % (self.name, enemy.name)[m
+[32m+[m[32m    return enemy.health <= 0[m
+[32m+[m[32mclass Enemy(Character):[m
+[32m+[m[32m  def __init__(self, player):[m
+[32m+[m[32m    Character.__init__(self)[m
+[32m+[m[32m    self.name = 'a goblin'[m
+[32m+[m[32m    self.health = randint(1, player.health)[m
+[32m+[m[32mclass Player(Character):[m
+[32m+[m[32m  def __init__(self):[m
+[32m+[m[32m    Character.__init__(self)[m
+[32m+[m[32m    self.state = 'normal'[m
+[32m+[m[32m    self.health = 10[m
+[32m+[m[32m    self.health_max = 10[m
+[32m+[m[32m  def quit(self):[m
+[32m+[m[32m    print "%s can't find the way back home, and dies of starvation.\nR.I.P." % self.name[m
+[32m+[m[32m   self.health = 0[m
+[32m+[m[32m  def help(self): print Commands.keys()[m
+[32m+[m[32m  def status(self): print "%s's health: %d/%d" % (self.name, self.health, self.health_max)[m
+[32m+[m[32m  def tired(self):[m
+[32m+[m[32m    print "%s feels tired." % self.name[m
+[32m+[m[32m    self.health = max(1, self.health - 1)[m
+[32m+[m[32m  def rest(self):[m
+[32m+[m[32m    if self.state != 'normal': print "%s can't rest now!" % self.name; self.enemy_attacks()[m
+[32m+[m[32m    else:[m
+[32m+[m[32m      print "%s rests." % self.name[m
+[32m+[m[32m      if randint(0, 1):[m
+[32m+[m[32m        self.enemy = Enemy(self)[m
+[32m+[m[32m        print "%s is rudely awakened by %s!" % (self.name, self.enemy.name)[m
+[32m+[m[32m        self.state = 'fight'[m
+[32m+[m[32m        self.enemy_attacks()[m
+[32m+[m[32m      else:[m
+[32m+[m[32m        if self.health < self.health_max:[m
+[32m+[m[32m          self.health = self.health + 1[m
+[32m+[m[32m        else: print "%s slept too much." % self.name; self.health = self.health - 1[m
+[32m+[m[32m  def explore(self):[m
+[32m+[m[32m    if self.state != 'normal':[m
+[32m+[m[32m      print "%s is too busy right now!" % self.name[m
+[32m+[m[32m      self.enemy_attacks()[m
+[32m+[m[32m    else:[m
+[32m+[m[32m      print "%s explores a twisty passage." % self.name[m
+[32m+[m[32m      if randint(0, 1):[m
+[32m+[m[32m        self.enemy = Enemy(self)[m
+[32m+[m[32m        print "%s encounters %s!" % (self.name, self.enemy.name)[m
+[32m+[m[32m        self.state = 'fight'[m
+[32m+[m[32m      else:[m
+[32m+[m[32m        if randint(0, 1): self.tired()[m
+[32m+[m[32m  def flee(self):[m
+[32m+[m[32m    if self.state != 'fight': print "%s runs in circles for a while." % self.name; self.tired()[m
+[32m+[m[32m    else:[m
+[32m+[m[32m      if randint(1, self.health + 5) > randint(1, self.enemy.health):[m
+[32m+[m[32m        print "%s flees from %s." % (self.name, self.enemy.name)[m
+[32m+[m[32m        self.enemy = None[m
+[32m+[m[32m        self.state = 'normal'[m
+[32m+[m[32m      else: print "%s couldn't escape from %s!" % (self.name, self.enemy.name); self.enemy_attacks()[m
+[32m+[m[32m  def attack(self):[m
+[32m+[m[32m    if self.state != 'fight': print "%s swats the air, without notable results." % self.name; self.tired()[m
+[32m+[m[32m    else:[m
+[32m+[m[32m      if self.do_damage(self.enemy):[m
+[32m+[m[32m        print "%s executes %s!" % (self.name, self.enemy.name)[m
+[32m+[m[32m        self.enemy = None[m
+[32m+[m[32m        self.state = 'normal'[m
+[32m+[m[32m        if randint(0, self.health) < 10:[m
+[32m+[m[32m          self.health = self.health + 1[m
+[32m+[m[32m          self.health_max = self.health_max + 1[m
+[32m+[m[32m          print "%s feels stronger!" % self.name[m
+[32m+[m[32m      else: self.enemy_attacks()[m
+[32m+[m[32m  def enemy_attacks(self):[m
+[32m+[m[32m    if self.enemy.do_damage(self): print "%s was slaughtered by %s!!!\nR.I.P." %(self.name, self.enemy.name)[m
+[32m+[m[32mCommands = {[m
+[32m+[m[32m  'quit': Player.quit,[m
+[32m+[m[32m  'help': Player.help,[m
+[32m+[m[32m  'status': Player.status,[m
+[32m+[m[32m  'rest': Player.rest,[m
+[32m+[m[32m  'explore': Player.explore,[m
+[32m+[m[32m  'flee': Player.flee,[m
+[32m+[m[32m  'attack': Player.attack,[m
+[32m+[m[32m  }[m
+[32m+[m[32mp = Player()[m
+[32m+[m[32mp.name = raw_input("What is your character's name? ")[m
+[32m+[m[32mprint "(type help to get a list of actions)\n"[m
+[32m+[m[32mprint "%s enters a dark cave, searching for adventure." % p.name[m
+[32m+[m[32mwhile(p.health > 0):[m
+[32m+[m[32m  line = raw_input("> ")[m
+[32m+[m[32m  args = line.split()[m
+[32m+[m[32m  if len(args) > 0:[m
+[32m+[m[32m    commandFound = False[m
+[32m+[m[32m    for c in Commands.keys():[m
+[32m+[m[32m      if args[0] == c[:len(args[0])]:[m
+[32m+[m[32m        Commands[c](p)[m
+[32m+[m[32m        commandFound = True[m
+[32m+[m[32m        break[m
+[32m+[m[32m    if not commandFound:[m
+[32m+[m[32m      print "%s doesn't understand the suggestion." % p.name[m
+\ No newline at end of file[m
+[1mdiff --git a/test.py b/test.py[m
+[1mnew file mode 100644[m
+[1mindex 0000000..83e5657[m
+[1m--- /dev/null[m
+[1m+++ b/test.py[m
+[36m@@ -0,0 +1,14 @@[m
+[32m+[m[32mclass Testclass(object):[m
+[32m+[m	[32mdef __init__(self,test1):[m
+[32m+[m		[32mself.test1 = test1[m
+[32m+[m
+[32m+[m[32mclass Testother(object):[m
+[32m+[m	[32mdef __init__(self,test1,test2):[m
+[32m+[m		[32mTestclass.__init__(self,test1)[m
+[32m+[m		[32mself.test2 = test2[m
+[32m+[m
+[32m+[m[32mTestobj = Testclass("test1")[m
+[32m+[m[32mOtherobj = Testother("test1special","test2")[m
+[32m+[m[32mprint(Testobj.test1)[m
+[32m+[m[32mprint(Otherobj.test1)[m
+[32m+[m[32mprint(Otherobj.test2)[m
+\ No newline at end of file[m

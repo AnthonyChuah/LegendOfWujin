@@ -13,130 +13,129 @@ import sys
 # To-next-level tnl shows how much exp is needed to gain the next level.
 # Tnl = level * 10.
 attributes = {
-  "str": 10,
-  "dex": 10,
-  "int": 10,
-  "maxhp": 50,
-  "maxsta": 40,
-  "maxmn": 40,
-  "exp": 0,
-  "level": 1,
-  "tnl": 10
+    "str": 10,
+    "dex": 10,
+    "int": 10,
+    "maxhp": 50,
+    "maxsta": 40,
+    "maxmn": 40,
+    "exp": 0,
+    "level": 1,
+    "tnl": 10
 }
 levelincrease = {
-  "str": 2,
-  "dex": 2,
-  "int": 2,
-  "maxhp": 10,
-  "maxsta": 8,
-  "maxmn": 8
+    "str": 2,
+    "dex": 2,
+    "int": 2,
+    "maxhp": 10,
+    "maxsta": 8,
+    "maxmn": 8
 }
 # There are 6 equipment slots.
 equipment = {
-  "mainhand": "knife",
-  "offhand": None,
-  "body": "cloth tunic",
-  "legs": "cloth trousers",
-  "feet": "sandals",
-  "hands": None
+    "mainhand": "knife",
+    "offhand": None,
+    "body": "cloth tunic",
+    "legs": "cloth trousers",
+    "feet": "sandals",
+    "hands": None
 }
 gold = 50
 # Inventory space is unlimited.
 inventory = [
-  "cloth gloves",
-  "wooden buckler"
+    "cloth gloves",
+    "wooden buckler"
 ]
-print(attributes)
-print(levelincrease)
-print(equipment)
-print(gold)
-print(inventory)
 
-sys.exit()
+# print(attributes)
+# print(levelincrease)
+# print(equipment)
+# print(gold)
+# print(inventory)
+# sys.exit()
 
 itemstats = dict()
-# Weapon stats [x,y,z] indicates: damage of xDy where x is number of dice, 
-# and y is the faces on each die; and cost of z gold. 
-# Each die's outcome is a discrete uniform distribution over 
-# the range 1 to y. 
+# Weapon stats [x,y,z] indicates: minimum dmg x, max dmg y.
+# Each die's outcome is a discrete uniform distribution over
+# the range 1 to y.
 itemstats["weapon"] = {
-  "knife":[1,3,25],
-  "dagger":[1,4,40],
-  "hammer":[2,2,55],
-  "hatchet":[1,6,70],
-  "butterfly-sword":[2,3,90],
-  "axe":[1,8,105],
-  "da-dao":[1,9,115],
-  "jian":[2,4,140],
-  "meteor-hammer":[3,2,140]
+    "knife": [1, 3, 25],
+    "dagger": [1, 4, 40],
+    "hammer": [2, 2, 55],
+    "hatchet": [1, 6, 70],
+    "butterfly-sword": [2, 3, 90],
+    "axe": [1, 8, 105],
+    "da-dao": [1, 9, 115],
+    "jian": [2, 4, 140],
+    "meteor-hammer": [3, 2, 140]
 }
-# Shields offer blockvalue, which increase the probability of blocking. 
-# Blocking consumes stamina. 
-# If enemy attack value is greater than double the blockvalue, the 
-# shield breaks completely. 
-# [x,z] where x is blockvalue and z is cost. 
+# Shields offer blockvalue, which increase the probability of blocking.
+# Blocking consumes stamina.
+# If enemy attack value is greater than double the blockvalue, the
+# shield breaks completely.
+# [x,z] where x is blockvalue and z is cost.
 itemstats["shield"] = {
-  "wooden buckler":[5,25],
-  "bronze buckler":[7,35],
-  "wooden shield":[8,40],
-  "iron buckler":[9,48],
-  "bronze shield":[10,55],
-  "steel buckler":[12,80],
-  "iron shield":[13,90],
-  "steel shield":[15,115]
+    "wooden buckler": [5, 25],
+    "bronze buckler": [7, 35],
+    "wooden shield": [8, 40],
+    "iron buckler": [9, 48],
+    "bronze shield": [10, 55],
+    "steel buckler": [12, 80],
+    "iron shield": [13, 90],
+    "steel shield": [15, 115]
 }
-# Armour has a slot (feet, body, etc.) and armour value. 
-# [x,y,z] where x is slot, y is armour value, and z is cost. 
+# Armour has a slot (feet, body, etc.) and armour value.
+# [x,y,z] where x is slot, y is armour value, and z is cost.
 itemstats["armour"] = {
-  "cloth tunic":["body",3,30],
-  "leather jerkin":["body",4,40],
-  "ring mail shirt":["body",5,55],
-  "chain mail shirt":["body",6,70],
-  "light breastplate":["body",7,85],
-  "heavy breastplate":["body",8,100],
-  "cloth trousers":["legs",2,20],
-  "leather leggings":["legs",3,30],
-  "mail leggings":["legs",4,40],
-  "plate leggings":["legs",5,55],
-  "sandals":["feet",1,8],
-  "shoes":["feet",2,18],
-  "boots":["feet",3,30],
-  "reinforced steel boots":["feet",4,40],
-  "cloth gloves":["hands",1,8],
-  "leather gloves":["hands",2,18],
-  "heavy leather gauntlets":["hands",3,30],
-  "mail gauntlets":["hands",4,40]
+    "cloth tunic": ["body", 3, 30],
+    "leather jerkin": ["body", 4, 40],
+    "ring mail shirt": ["body", 5, 55],
+    "chain mail shirt": ["body", 6, 70],
+    "light breastplate": ["body", 7, 85],
+    "heavy breastplate": ["body", 8, 100],
+    "cloth trousers": ["legs", 2, 20],
+    "leather leggings": ["legs", 3, 30],
+    "mail leggings": ["legs", 4, 40],
+    "plate leggings": ["legs", 5, 55],
+    "sandals": ["feet", 1, 8],
+    "shoes": ["feet", 2, 18],
+    "boots": ["feet", 3, 30],
+    "reinforced steel boots": ["feet", 4, 40],
+    "cloth gloves": ["hands", 1, 8],
+    "leather gloves": ["hands", 2, 18],
+    "heavy leather gauntlets": ["hands", 3, 30],
+    "mail gauntlets": ["hands", 4, 40]
 }
 itemstats_flat = dict()
 for itemtype in itemstats:
-  # Each itemtype will be itemstats["weapon"] etc. 
-  # itemtype is itself a dict nested inside the itemstats dict. 
-  for item in itemtype:
-    # Each item is "cloth tunic" for example, and its lookup value is 
-    # ["body",3,30] for example. 
-    itemstats_flat[item] = itemtype[item]
+    # Each itemtype will be itemstats["weapon"] etc.
+    # itemtype is itself a dict nested inside the itemstats dict.
+    for item in itemtype:
+        # Each item is "cloth tunic" for example, and its lookup value is
+        # ["body",3,30] for example.
+        itemstats_flat[item] = itemtype[item]
 
 print(itemstats)
 print(itemstats_flat)
 sys.exit()
 
-skilldesc = {
-  "atk":"attack with a balance of offence and defence; 1 stamina",
-  "def":"attack defensively; 1 stamina",
-  "str":"attack offensively; 1 stamina",
-  "shatter":"attacks with normal offence but ignores enemy defence; 4 stamina",
-  "bash":"has chance of denying opponent's attack and attacks with normal offence; 4 stamina; chance scales with str",
-  "sunder":"attacks with low offence and reduces enemy defence; 5 stamina; reduction scales with dex",
-  "weaken":"attacks with low offence and reduces enemy offence; 5 stamina; reduction scales with dex",
-  "charge":"attacks with high offence dealing more damage if enemy hp is high; 5 stamina; scales with str",
-  "flurry":"attacks 2 to 4 times; 8 stamina, scales with the sum of str and dex"
+skills = {
+    "atk": "normal attack; 1 stamina",
+    "def": "defensive attack has increased block chance; 1 stamina",
+    "str": "heavy attack has decreased block chance; 1 stamina",
+    "shatter": "ignores enemy defence; 3 stamina; scales with str",
+    "bash": "has chance to deny enemy attack; 3 stamina; chance scales with str",
+    "sunder": "light attack reduces enemy defence; 4 stamina; reduction scales with dex",
+    "weaken": "light attack reduces enemy offence; 4 stamina; reduction scales with dex",
+    "charge": "attacks with high offence dealing more damage if enemy hp is high; 5 stamina; scales with str",
+    "flurry": "attacks 2 to 4 times; 8 stamina, scales with the sum of str and dex"
 }
 spelldesc = {
-  "mm":"magic missile deals low damage; costs 1 mind; combat only",
-  "heal":"heals 10 hp; costs 2 mind",
-  "refresh":"restores 10 stamina; costs 3 mind",
-  "barrier":"increases defence; 4 mind; fades after combat",
-  "enfeeble":"decreases enemy offence; 4 mind; combat only"
+    "mm": "magic missile deals low damage; costs 1 mind; combat only",
+    "heal": "heals 10 hp; costs 2 mind",
+    "refresh": "restores 10 stamina; costs 3 mind",
+    "barrier": "increases defence; 4 mind; fades after combat",
+    "enfeeble": "decreases enemy offence; 4 mind; combat only"
 }
 
 
