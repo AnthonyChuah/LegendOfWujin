@@ -1,0 +1,11 @@
+,desc,cost
+atk,normal attack,1
+def,defensive attack with higher block,1
+str,strong attack with lower block,1
+shatter,ignores defence; defence ignored scales with str,3
+bash,has chance to deny enemy attack; chance scales with str,3
+sunder,light attack reduces enemy defence; reduction scales with dex,4
+weaken,light attack reduces enemy offence; reduction scales with dex,4
+charge,heavy attack does more damage if enemy healthy; power scales with str,5
+execute,heavy attack does more damage if enemy near-dead; power scales with dex,6
+flurry,attacks 2 to 5 times; number scales with dex,8
