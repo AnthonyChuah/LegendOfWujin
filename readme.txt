@@ -9,7 +9,47 @@ Everyone has heard the tales concerning Wujin, the indomitable blademaster of th
 
 However, his intense study of the martial arts led him to madness. His fall from grace was as swift as his meteoric rise, and soon he gathered brigands and barbarians to prey on the people of the Empire. Each day, hundreds of peasants lose their homes and possessions as his henchmen ravage the countryside. 
 
-You are a young adventurer, keen to make your mark upon this world, and rid Imperial China of this menace. Will you succeed where others have failed? 
+You are a young adventurer, keen to secure yourself a place in the history books, and rid Imperial China of this menace. Will you succeed where others have failed? 
+
+
+
+How To Play
+
+Download game.py, items.csv, map.csv, mobs.csv and place them in the same folder. 
+
+You need to set up Python 3, and execute game.py with the python.exe in your operating system. Download Python 3 from www.python.org. Open your OS' terminal (e.g. Windows CMD, Windows Powershell, Mac OS Terminal, etc.), and navigate to the folder containing game.py. 
+
+Call python.exe on game.py like this (if your Python 3 is in C:/Python3/): C:/Python3/python.exe game.py
+
+
+
+Controls
+
+When you are not in combat, you can move, shop, train, hunt, etc. 
+
+List of possible commands: 
+
+north/south/east/west: move in cardinal direction to adjoining 'room' (location)
+rest: rest and restore hp, stamina, mind
+hunt: hunt for enemies in this room
+look: look at the room you are in
+score: display your attributes, condition, known skills, and known spells
+inv: display your inventory and gold
+eq: display your equipment
+equip: opens the equipping dialogue
+shop: opens the shop dialogue which can only be done in town
+train: opens the training dialogue only in town
+cast: opens the out-of-combat spell dialogue
+challenge: start the final boss fight
+quit: quits the game
+
+When you are in combat, the list of commands is strongly restricted. You may only follow the prompts in the combat text. 
+
+List of combat commands:
+
+flee: attempts to flee
+[skill name]: uses skill corresponding to [skill name]
+[spell name]: uses spell corresponding to [spell name]
 
 
 
