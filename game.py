@@ -59,9 +59,23 @@ class Character(object):
         self.skilldict["atk"] = self.Attack
         self.skilldict["def"] = self.Defend
         self.skilldict["str"] = self.Strong
+        self.skilldict["shatter"] = self.Shatter
+        self.skilldict["bash"] = self.Bash
+        self.skilldict["sunder"] = self.Sunder
+        self.skilldict["weaken"] = self.Weaken
+        self.skilldict["charge"] = self.Charge
+        self.skilldict["execute"] = self.Execute
+        self.skilldict["flurry"] = self.Flurry
         self.spelldict = OrderedDict()
+        self.spelldict["blast"] = self.Blast
         self.spelldict["heal"] = self.Heal
         self.spelldict["refresh"] = self.Refresh
+        self.spelldict["barrier"] = self.Barrier
+        self.spelldict["premonition"] = self.Premonition
+        self.spelldict["enfeeble"] = self.Enfeeble
+        self.spelldict["freeze"] = self.Freeze
+        self.spelldict["vampiric"] = self.Vampiric
+        self.spelldict["fireball"] = self.Fireball
         self.spelldict["recall"] = self.Recall
 
     def __str__(self):
@@ -297,7 +311,7 @@ class Character(object):
             self.condition["sta"] -= 1
             # Determine attack roll.
             weaponroll = random.randint(self.equipbonus["weaponmin"],self.equipbonus["weaponmax"])
-            base_attack = weaponroll + self.secondary["damroll"] + self.buffs["damroll"]
+            base_attack = 4 + self.secondary["damroll"] + self.buffs["damroll"]
             attackroll = weaponroll + base_attack
             # Determine enemy defence roll.
             base_defence = max(0, Enemy.defence - Enemy.debuffs["defence"])
@@ -325,7 +339,7 @@ class Character(object):
             self.condition["sta"] -= 1
             # Determine attack roll.
             weaponroll = random.randint(self.equipbonus["weaponmin"],self.equipbonus["weaponmax"])
-            base_attack = weaponroll + self.secondary["damroll"] + self.buffs["damroll"]
+            base_attack = 3 + self.secondary["damroll"] + self.buffs["damroll"]
             attackroll = round((1 / self.posture) * (weaponroll + base_attack))
             # Determine enemy defence roll.
             base_defence = max(0, Enemy.defence - Enemy.debuffs["defence"])
@@ -352,7 +366,7 @@ class Character(object):
             self.condition["sta"] -= 1
             # Determine attack roll.
             weaponroll = random.randint(self.equipbonus["weaponmin"],self.equipbonus["weaponmax"])
-            base_attack = weaponroll + self.secondary["damroll"] + self.buffs["damroll"]
+            base_attack = 5 + self.secondary["damroll"] + self.buffs["damroll"]
             attackroll = round(1.25 * (weaponroll + base_attack))
             # Determine enemy defence roll.
             base_defence = max(0, Enemy.defence - Enemy.debuffs["defence"])
@@ -366,6 +380,152 @@ class Character(object):
                 print("You deal " + str(damage_done) + " damage.")
             else:
                 print("You fail to breach " + Enemy.name + "'s defences.")
+
+    def Shatter(self,Enemy):
+        if (self.condition["sta"] < 3):
+            print("You attempt to make a shattering blow, but lack the stamina to follow through.")
+            return(None)
+        else:
+            # Use stamina.
+            self.condition["sta"] -= 3
+            # Determine attack roll.
+            weaponroll = random.randint(self.equipbonus["weaponmin"],self.equipbonus["weaponmax"])
+            base_attack = weaponroll + self.secondary["damroll"] + self.buffs["damroll"]
+            attackroll = weaponroll + base_attack
+            print("With inexorable force, you shatter your opponent's defences and strike true.")
+            print("You deal " + str(attackroll) + " damage.")
+            Enemy.hp -= attackroll
+            return(None)
+
+    def Bash(self,Enemy):
+        if (self.condition["sta"] < 3):
+            print("You attempt to bash your enemy with overbearing momentum, but lack the stamina to follow through.")
+            return(None)
+        else:
+            self.condition["sta"] -= 3
+            weaponroll = random.randint(self.equipbonus["weaponmin"],self.equipment["weaponmax"])
+            base_attack = 4 + self.secondary["damroll"] + self.buffs["damroll"]
+            attackroll = weaponroll + base_attack
+            base_defence = max(0, Enemy.defence - Enemy.debuffs["defence"])
+            defroll_min = round(0.25 * base_defence)
+            defroll = random.randint(defroll_min, base_defence)
+            damage_done = max(0, attackroll - defroll)
+            bash_power = self.attributes["str"]
+            bash_diff = bash_power - Enemy.defence
+            bash_baseprob = (1 / (1 + math.pow(math.exp(1), -bash_diff)))
+            bash_prob = min(0.8, bash_baseprob)
+            if (random.random() < bash_prob):
+                # Then bash skill stuns the enemy successfully.
+                print("Like a boar charging down the mountain, you slam your victim to the ground with sheer momentum!")
+                print("You deal " + str(damage_done) + " damage.")
+                Enemy.hp -= damage_done
+                Enemy.stun = True
+                return(None)
+            else:
+                print("You charge wildly at your foe, and connect with a solid blow.")
+                print("You deal " + str(damage_done) + " damage.")
+                Enemy.hp -= damage_done
+                return(None)
+
+    def Sunder(self,Enemy):
+        if (self.condition["sta"] < 3):
+            print("You attempt to sunder your opponent's armour, but lack the stamina to follow through.")
+            return(None)
+        else:
+            self.condition["sta"] -= 3
+            weaponroll = random.randint(self.equipbonus["weaponmin"],self.equipment["weaponmax"])
+            base_attack = 4 + self.secondary["damroll"] + self.buffs["damroll"]
+            attackroll = weaponroll + base_attack
+            sunder_power = round(self.secondary["speed"] / 2 + 2)
+            base_defence = max(0, Enemy.defence - Enemy.debuffs["defence"])
+            defroll_min = round(0.25 * base_defence)
+            defroll = random.randint(defroll_min, base_defence)
+            damage_done = max(0, attackroll - defroll)
+            Enemy.debuffs["defence"] = sunder_power
+            print("You spot a clever opportunity to tear down your foe's defences.")
+            print("You deal " + str(damage_done) + " damage.")
+            Enemy.hp -= damage_done
+            return(None)
+
+    def Weaken(self,Enemy):
+        if (self.condition["sta"] < 3):
+            print("You attempt to weaken your opponent, but lack the stamina to follow through.")
+            return(None)
+        else:
+            self.condition["sta"] -= 3
+            weaponroll = random.randint(self.equipbonus["weaponmin"],self.equipment["weaponmax"])
+            base_attack = 4 + self.secondary["damroll"] + self.buffs["damroll"]
+            attackroll = weaponroll + base_attack
+            weaken_power = round(self.secondary["speed"] / 2 + 2)
+            base_defence = max(0, Enemy.defence - Enemy.debuffs["defence"])
+            defroll_min = round(0.25 * base_defence)
+            defroll = random.randint(defroll_min, base_defence)
+            damage_done = max(0, attackroll - defroll)
+            Enemy.debuffs["attack"] = weaken_power
+            print("You land a crippling blow, weakening your opponent.")
+            print("You deal " + str(damage_done) + " damage.")
+            Enemy.hp -= damage_done
+            return(None)
+
+    def Charge(self,Enemy):
+        if (self.condition["sta"] < 4):
+            print("You attempt to surprise your unwary foe with a charging attack, but lack the stamina to follow through.")
+            return(None)
+        else:
+            self.condition["sta"] -= 4
+            enemy_fractionhp = Enemy.hp / Enemy.maxhp
+            damage_multiplier = 1 + enemy_fractionhp
+            weaponroll = random.randint(self.equipbonus["weaponmin"],self.equipment["weaponmax"])
+            base_attack = 4 + self.secondary["damroll"] + self.buffs["damroll"]
+            attackroll = (weaponroll + base_attack) * damage_multiplier
+            base_defence = max(0, Enemy.defence - Enemy.debuffs["defence"])
+            defroll_min = round(0.25 * base_defence)
+            defroll = random.randint(defroll_min, base_defence)
+            damage_done = max(0, attackroll - defroll)
+            Enemy.hp -= damage_done
+            print("Taking your opponent by surprise, you devastate it with a mighty charging attack!")
+            print("You deal " + str(damage_done) + " damage.")
+            return(None)
+
+    def Execute(self,Enemy):
+        if (self.condition["sta"] < 6):
+            print("You attempt to deliver the coup de grace, but lack the stamina to follow through.")
+            return(None)
+        else:
+            self.condition["sta"] -= 6
+            enemy_fractionhp = Enemy.hp / Enemy.maxhp
+            damage_multiplier = 1 + (1 - enemy_fractionhp)
+            weaponroll = random.randint(self.equipbonus["weaponmin"],self.equipment["weaponmax"])
+            base_attack = 4 + self.secondary["damroll"] + self.buffs["damroll"] + self.secondary["speed"]
+            attackroll = (weaponroll + base_attack) * damage_multiplier
+            base_defence = max(0, Enemy.defence - Enemy.debuffs["defence"])
+            defroll_min = round(0.25 * base_defence)
+            defroll = random.randint(defroll_min, base_defence)
+            damage_done = max(0, attackroll - defroll)
+            Enemy.hp -= damage_done
+            print("Weaving through the forms of the legendary Grandmasters of Wu-Dang Temple, you strike a finishing blow to your opponent's vitals!")
+            print("You deal " + str(damage_done) + " damage.")
+            return(None)
+
+    def Flurry(self,Enemy):
+        if (self.condition["sta"] < 8):
+            print("You attempt to start a flurry of attacks, but lack the stamina to follow through.")
+            return(None)
+        else:
+            self.condition["sta"] -= 8
+            flurries = min(5, round(self.secondary["speed"] / 4) + 1)
+            print("You begin a flurry of " + str(flurries) + " consecutive strikes.")
+            for _ in range(flurries):
+                weaponroll = random.randint(self.equipbonus["weaponmin"],self.equipbonus["weaponmax"])
+                base_attack = 4 + self.secondary["damroll"] + self.buffs["damroll"]
+                attackroll = weaponroll + base_attack
+                base_defence = max(0, Enemy.defence - Enemy.debuffs["defence"])
+                defroll_min = round(0.25 * base_defence)
+                defroll = random.randint(defroll_min, base_defence)
+                damage_done = max(0,attackroll - defroll)
+                Enemy.hp -= damage_done
+                print("Your swift attack deals " + str(damage_done) + " damage.")
+            return(None)
 
     def Heal(self,Enemy=None):
         # Determine amount healed according to spellpower.
@@ -382,22 +542,114 @@ class Character(object):
 
     def Refresh(self,Enemy=None):
         if (self.condition["mn"] < 3):
-            print("You do not have enough mind power to restore stamina.")
+            print("You do not have enough mental power to restore stamina.")
             return(None)
         else:
             amount_refreshed = self.secondary["spellpower"] * 2 - 4
             print("Drawing upon ambient energy, you reinvigorate yourself and restore " + str(amount_refreshed) + " stamina!")
             self.condition["mn"] -= 3
             self.condition["sta"] = min(self.condition["sta"] + amount_refreshed, self.attributes["maxsta"])
+            return(None)
 
     def Recall(self,Enemy=None):
         if (self.condition["mn"] < 8):
-            print("You do not have enough mind power to recall.")
+            print("You do not have enough mental power to recall.")
             return(None)
         else:
             print("You utter a word of recall and vanish in a flash of blinding white light! As you re-orient yourself, you find yourself in town.")
             self.condition["mn"] -= 8
             self.room = City
+            return(None)
+
+    def Premonition(self,Enemy=None):
+        if (self.condition["mn"] < 3):
+            print("You do not have enough mental power to grant yourself premonitions.")
+            return(None)
+        else:
+            bonus_block = self.secondary["spellpower"]
+            print("Gaining a vision of the immediate future, you enhance your shield blocking skill.")
+            self.buffs["block"] = bonus_block
+            self.condition["mn"] -= 3
+            return(None)
+
+    def Barrier(self,Enemy=None):
+        if (self.condition["mn"] < 3):
+            print("You do not have enough mental power to weave a barrier around yourself.")
+            return(None)
+        else:
+            bonus_deflect = self.secondary["spellpower"]
+            print("You weave a shimmering barrier around yourself to harden yourself against enemy attack.")
+            self.condition["mn"] -= 3
+            self.buffs["deflect"] = bonus_deflect
+            return(None)
+
+    def Enfeeble(self,Enemy):
+        if (self.condition["mn"] < 3):
+            print("You do not have enough mental power to enfeeble your foe.")
+            return(None)
+        else:
+            enfeeblement = self.secondary["spellpower"]
+            Enemy.debuffs["attack"] = enfeeblement
+            print("With a wave of your hand, you visit the chill of the grave upon " + Enemy.name + ", making it weak and feeble.")
+            self.condition["mn"] -= 3
+            return(None)
+
+    def Freeze(self,Enemy):
+        if (self.condition["mn"] < 3):
+            print("You do not have enough mental power to freeze your foe.")
+            return(None)
+        else:
+            spellpower_coef = self.secondary["spellpower"] * 2
+            penetration_coef = spellpower_coef - Enemy.attack
+            prob_threshold = (1 / (1 + math.pow(math.exp(1), -penetration_coef)))
+            freeze_prob = min(0.85, prob_threshold)
+            freeze_damage = self.secondary["spellpower"] * 2 - 4
+            if (random.random() < freeze_prob):
+                # Then freeze spell stuns the enemy successfully.
+                print("Conjuring the blistering cold of the Arctic floes, you freeze your foe into helplessness!")
+                Enemy.stun = True
+                Enemy.hp -= freeze_damage
+                self.condition["mn"] -= 3
+                return(None)
+            else:
+                print("You blast your foe with the biting cold of the Siberian tundra.")
+                Enemy.hp -= freeze_damage
+                self.condition["mn"] -= 3
+                return(None)
+
+    def Blast(self,Enemy):
+        if (self.condition["mn"] < 1):
+            print("You do not have enough mental power to blast your foe.")
+            return(None)
+        else:
+            blast_damage = self.secondary["spellpower"] + 3
+            print("You raise a clenched fist, and blast your victim with searing flames!")
+            Enemy.hp -= blast_damage
+            self.condition["mn"] -= 3
+            return(None)
+
+    def Vampiric(self,Enemy):
+        if (self.condition["mn"] < 5):
+            print("You do not have enough mental power to drain life from your foe.")
+            return(None)
+        else:
+            vamp_damage = round(self.secondary["spellpower"] * 2.5)
+            vamp_heal = self.secondary["spellpower"] * 2
+            print("With outstretched hands, you hungrily drain " + Enemy.name + " of its life-force.")
+            Enemy.hp -= vamp_damage
+            self.condition["hp"] += vamp_heal
+            self.condition["mn"] -= 5
+            return(None)
+
+    def Fireball(self,Enemy):
+        if (self.condition["mn"] < 6):
+            print("You do not have enough mental power to conjure the great fireball.")
+            return(None)
+        else:
+            fireball_damage = round(self.secondary["spellpower"] * 3.5) + 1
+            print("Concentrating the power of the radiant sun, you forge a crackling ball of incandescent fire. At your command, the fireball surges unerringly towards its victim!")
+            Enemy.hp -= fireball_damage
+            self.condition["mn"] -= 6
             return(None)
 
     def HelpSkills(self):
@@ -484,6 +736,7 @@ class Character(object):
                     self.condition["state"] = "normal"
                     Enemy.hp = Enemy.maxhp
                     Enemy.debuffs = debuffs.copy()
+                    Enemy.stun = False
                     self.buffs = buffs.copy()
                     return(None)
                 else:
@@ -502,6 +755,7 @@ class Character(object):
                         self.condition["state"] = "normal"
                         Enemy.hp = Enemy.maxhp
                         Enemy.debuffs = debuffs
+                        Enemy.stun = False
                         self.buffs = buffs.copy()
                         self.room = City
                         return(None)
@@ -541,6 +795,7 @@ class Character(object):
         self.room.killcount += 1
         Enemy.hp = Enemy.maxhp
         Enemy.debuffs = debuffs.copy()
+        Enemy.stun = False
         # If exp exceeds tnl, level up.
         if (self.attributes["exp"] >= self.attributes["tnl"]):
             self.LevelUp()
@@ -550,7 +805,6 @@ class Character(object):
         print("You have fallen in the quest for glory.")
         print("Many will follow in your footsteps, but only one hero will emerge victorious.")
         sys.exit()
-
 
     def Equip(self):
         if (self.condition["state"] == "fighting"):
@@ -661,6 +915,7 @@ class Mob(object):
         self.speed = int(speed)
         self.expgiven = int(expgiven)
         self.loot = int(loot)
+        self.stun = False
         # Moveset is the list of attacks they can use.
         self.moveset = ["Attack"]
         # Moveprob is the probability of using each attack.
@@ -668,12 +923,18 @@ class Mob(object):
         # Debuffs can be applied by player.
         self.debuffs = debuffs.copy()
     def Attack(self,Player):
+        # If the mob is stunned, set stun to False and mob misses turn.
+        if (self.stun == True):
+            print(self.name + " is stunned and unable to act.")
+            self.stun = False
+            Player.posture = 1
+            return(None)
         # Determine block probability if player has shield.
         if (Player.equipment["offhand"] == None):
             pass
         else:
             enemy_penetration = 0.5 * self.attack + 0.5 * self.speed
-            blockvalue = round(Player.posture * (Player.secondary["speed"] + Player.equipbonus["block"] + Player.buffs["block"]))
+            blockvalue = round(Player.posture * (Player.secondary["damroll"] + Player.equipbonus["block"] + Player.buffs["block"]))
             blockroll_min = round(0.25 * blockvalue)
             blockroll = random.randint(blockroll_min,blockvalue)
             if (self.attack > (2 * blockroll + blockroll_min) and Player.posture > 0):
