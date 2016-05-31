@@ -403,15 +403,15 @@ class Character(object):
             return(None)
         else:
             self.condition["sta"] -= 3
-            weaponroll = random.randint(self.equipbonus["weaponmin"],self.equipment["weaponmax"])
+            weaponroll = random.randint(self.equipbonus["weaponmin"],self.equipbonus["weaponmax"])
             base_attack = 4 + self.secondary["damroll"] + self.buffs["damroll"]
             attackroll = weaponroll + base_attack
             base_defence = max(0, Enemy.defence - Enemy.debuffs["defence"])
             defroll_min = round(0.25 * base_defence)
             defroll = random.randint(defroll_min, base_defence)
             damage_done = max(0, attackroll - defroll)
-            bash_power = self.attributes["str"]
-            bash_diff = bash_power - Enemy.defence
+            bash_power = (self.secondary["damroll"] + self.buffs["damroll"]) * 2
+            bash_diff = bash_power - (Enemy.attack - Enemy.debuffs["attack"])
             bash_baseprob = (1 / (1 + math.pow(math.exp(1), -bash_diff)))
             bash_prob = min(0.8, bash_baseprob)
             if (random.random() < bash_prob):
@@ -433,7 +433,7 @@ class Character(object):
             return(None)
         else:
             self.condition["sta"] -= 3
-            weaponroll = random.randint(self.equipbonus["weaponmin"],self.equipment["weaponmax"])
+            weaponroll = random.randint(self.equipbonus["weaponmin"],self.equipbonus["weaponmax"])
             base_attack = 4 + self.secondary["damroll"] + self.buffs["damroll"]
             attackroll = weaponroll + base_attack
             sunder_power = round(self.secondary["speed"] / 2 + 2)
@@ -453,7 +453,7 @@ class Character(object):
             return(None)
         else:
             self.condition["sta"] -= 3
-            weaponroll = random.randint(self.equipbonus["weaponmin"],self.equipment["weaponmax"])
+            weaponroll = random.randint(self.equipbonus["weaponmin"],self.equipbonus["weaponmax"])
             base_attack = 4 + self.secondary["damroll"] + self.buffs["damroll"]
             attackroll = weaponroll + base_attack
             weaken_power = round(self.secondary["speed"] / 2 + 2)
@@ -475,13 +475,13 @@ class Character(object):
             self.condition["sta"] -= 4
             enemy_fractionhp = Enemy.hp / Enemy.maxhp
             damage_multiplier = 1 + enemy_fractionhp
-            weaponroll = random.randint(self.equipbonus["weaponmin"],self.equipment["weaponmax"])
+            weaponroll = random.randint(self.equipbonus["weaponmin"],self.equipbonus["weaponmax"])
             base_attack = 4 + self.secondary["damroll"] + self.buffs["damroll"]
             attackroll = (weaponroll + base_attack) * damage_multiplier
             base_defence = max(0, Enemy.defence - Enemy.debuffs["defence"])
             defroll_min = round(0.25 * base_defence)
             defroll = random.randint(defroll_min, base_defence)
-            damage_done = max(0, attackroll - defroll)
+            damage_done = round(max(0, attackroll - defroll))
             Enemy.hp -= damage_done
             print("Taking your opponent by surprise, you devastate it with a mighty charging attack!")
             print("You deal " + str(damage_done) + " damage.")
@@ -495,13 +495,13 @@ class Character(object):
             self.condition["sta"] -= 6
             enemy_fractionhp = Enemy.hp / Enemy.maxhp
             damage_multiplier = 1 + (1 - enemy_fractionhp)
-            weaponroll = random.randint(self.equipbonus["weaponmin"],self.equipment["weaponmax"])
+            weaponroll = random.randint(self.equipbonus["weaponmin"],self.equipbonus["weaponmax"])
             base_attack = 4 + self.secondary["damroll"] + self.buffs["damroll"] + self.secondary["speed"]
             attackroll = (weaponroll + base_attack) * damage_multiplier
             base_defence = max(0, Enemy.defence - Enemy.debuffs["defence"])
             defroll_min = round(0.25 * base_defence)
             defroll = random.randint(defroll_min, base_defence)
-            damage_done = max(0, attackroll - defroll)
+            damage_done = round(max(0, attackroll - defroll))
             Enemy.hp -= damage_done
             print("Weaving through the forms of the legendary Grandmasters of Wu-Dang Temple, you strike a finishing blow to your opponent's vitals!")
             print("You deal " + str(damage_done) + " damage.")
@@ -522,7 +522,7 @@ class Character(object):
                 base_defence = max(0, Enemy.defence - Enemy.debuffs["defence"])
                 defroll_min = round(0.25 * base_defence)
                 defroll = random.randint(defroll_min, base_defence)
-                damage_done = max(0,attackroll - defroll)
+                damage_done = round(max(0,attackroll - defroll))
                 Enemy.hp -= damage_done
                 print("Your swift attack deals " + str(damage_done) + " damage.")
             return(None)
@@ -599,20 +599,22 @@ class Character(object):
             print("You do not have enough mental power to freeze your foe.")
             return(None)
         else:
-            spellpower_coef = self.secondary["spellpower"] * 2
-            penetration_coef = spellpower_coef - Enemy.attack
+            spellpower_coef = (self.secondary["spellpower"] + self.buffs["spellpower"]) * 2
+            penetration_coef = spellpower_coef - (Enemy.attack - Enemy.debuffs["attack"])
             prob_threshold = (1 / (1 + math.pow(math.exp(1), -penetration_coef)))
-            freeze_prob = min(0.85, prob_threshold)
+            freeze_prob = min(0.8, prob_threshold)
             freeze_damage = self.secondary["spellpower"] * 2 - 4
             if (random.random() < freeze_prob):
                 # Then freeze spell stuns the enemy successfully.
                 print("Conjuring the blistering cold of the Arctic floes, you freeze your foe into helplessness!")
+                print("You deal " + str(freeze_damage) + " damage.")
                 Enemy.stun = True
                 Enemy.hp -= freeze_damage
                 self.condition["mn"] -= 3
                 return(None)
             else:
                 print("You blast your foe with the biting cold of the Siberian tundra.")
+                print("You deal " + str(freeze_damage) + " damage.")
                 Enemy.hp -= freeze_damage
                 self.condition["mn"] -= 3
                 return(None)
@@ -624,6 +626,7 @@ class Character(object):
         else:
             blast_damage = self.secondary["spellpower"] + 3
             print("You raise a clenched fist, and blast your victim with searing flames!")
+            print("You deal " + str(blast_damage) + " damage.")
             Enemy.hp -= blast_damage
             self.condition["mn"] -= 3
             return(None)
@@ -639,6 +642,7 @@ class Character(object):
             Enemy.hp -= vamp_damage
             self.condition["hp"] += vamp_heal
             self.condition["mn"] -= 5
+            print("You deal " + str(vamp_damage) + " damage and restore " + str(vamp_heal) + " hp.")
             return(None)
 
     def Fireball(self,Enemy):
@@ -648,6 +652,7 @@ class Character(object):
         else:
             fireball_damage = round(self.secondary["spellpower"] * 3.5) + 1
             print("Concentrating the power of the radiant sun, you forge a crackling ball of incandescent fire. At your command, the fireball surges unerringly towards its victim!")
+            print("You deal " + str(fireball_damage) + " damage.")
             Enemy.hp -= fireball_damage
             self.condition["mn"] -= 6
             return(None)
@@ -1347,20 +1352,32 @@ commands = {
 
 print("Welcome to the Legend of Wujin!")
 print("Please read the readme.txt file for instructions.")
-# print("What is your name?")
+print("Is this debug mode? If so, supply the code.")
+debugcode = input("> ")
 player_name = "Placeholder"
 # Create player object of class Character.
 player = Character(player_name)
 
 # Debug mode: make character very high stats and high gold.
-player.gold = 5000
-player.attributes["str"] = 34
-player.attributes["dex"] = 34
-player.attributes["int"] = 24
-player.attributes["maxhp"] = 100
-player.attributes["maxmn"] = 80
-player.attributes["maxsta"] = 80
-player.secondary = LevelUpSecondary(player.attributes)
+if (debugcode == "debug"):
+    player.gold = 5000
+    player.attributes["str"] = 34
+    player.attributes["dex"] = 34
+    player.attributes["int"] = 24
+    player.attributes["maxhp"] = 100
+    player.attributes["maxmn"] = 80
+    player.attributes["maxsta"] = 80
+    player.equipment["mainhand"] = "meteor hammer"
+    player.equipment["offhand"] = "steel shield"
+    player.equipment["legs"] = "plate leggings"
+    player.equipment["feet"] = "reinforced boots"
+    player.equipment["hands"] = "mail gauntlets"
+    player.equipment["body"] = "heavy platemail"
+    player.secondary = LevelUpSecondary(player.attributes)
+    player.spells = ["blast","heal","refresh","barrier","premonition","enfeeble","freeze","vampiric","fireball","recall"]
+    player.skills = ["atk","def","str","shatter","bash","sunder","weaken","charge","execute","flurry"]
+else:
+    pass
 
 print("You begin your adventure in Xian City.")
 # Game is a while loop that continues until player dies, or wins.
@@ -1369,6 +1386,7 @@ while (True):
     # rounds_taken records the number of rounds you took to win the game.
     rounds_taken += 1
     command = input("> ").lower()
+    player.UpdateEquipBonus()
     if (command in cardinal_directions):
         # Player is moving.
         player.Move(command)
