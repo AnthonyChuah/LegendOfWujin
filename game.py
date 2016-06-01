@@ -224,6 +224,9 @@ class Character(object):
                 print("You need " + str(train_cost) + " gold to train in this skill. Come back again.")
                 return(None)
             else:
+                if (train_skillchoice in self.skills):
+                    print("You already know that skill. Come back again.")
+                    return(None)
                 self.skills.append(train_skillchoice)
                 self.gold -= train_cost
                 print("You spend " + str(train_cost) + " gold.")
@@ -248,6 +251,9 @@ class Character(object):
                 print("You need " + (train_cost) + " gold to train in this skill. Come back again.")
                 return(None)
             else:
+                if (train_spellchoice in self.spells):
+                    print("You already know that spell. Come back again.")
+                    return(None)
                 self.spells.append(train_spellchoice)
                 self.gold -= train_cost
                 print("You spend " + str(train_cost) + " gold.")
@@ -710,7 +716,7 @@ class Character(object):
             self.statusbar = UpdateStatusBar(self.condition)
             enemy_fractionhp = Enemy.hp / Enemy.maxhp
             if (enemy_fractionhp > 0.75):
-                enemy_injury = "Enemy: healthy"
+                enemy_injury = "Enemy: mostly healthy"
             elif (enemy_fractionhp > 0.5):
                 enemy_injury = "Enemy: injured"
             elif (enemy_fractionhp > 0.25):
@@ -719,7 +725,7 @@ class Character(object):
                 enemy_injury = "Enemy: nearly dead"
             prompt = self.statusbar + enemy_injury
             print(prompt)
-            print("You may 'flee' or type in the name of a skill or spell to use.")
+            print("\nYou may 'flee' or type in the name of a skill or spell to use.")
             print(self.skills)
             print(self.spells)
             combat_move = input("> ").lower()

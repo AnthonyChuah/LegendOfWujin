@@ -122,8 +122,8 @@ bash: 3 sta 14 dex: has a chance to deny enemy attack and chance scales with Str
 sunder: 3 sta 16 dex: light attack reduces enemy defence and reduction scales with Dexterity
 weaken: 3 sta 18 dex: light attack reduces enemy offence and reduction scales with Dexterity
 charge: 4 sta 20 dex: heavy attack more effective if enemy hp high and damage scales with Strength
-execute: 6 sta 24 dex: heavy attack more effective if enemy hp low and damage scales with Dexterity
-flurry: 8 sta 26 dex: attacks 2 to 5 times and number of attacks scales with Dexterity
+execute: 6 sta 22 dex: heavy attack more effective if enemy hp low and damage scales with Dexterity
+flurry: 8 sta 24 dex: attacks 2 to 5 times and number of attacks scales with Dexterity
 
 You start with no spells. To learn spells, you must train. 
 
@@ -138,7 +138,7 @@ enfeeble: 3 mn 12 int: damages and decreases enemy offence
 freeze: 3 mn 14 int: damages with chance to deny enemy attack
 vampiric: 5 mn 18 int: vampiric touch damages enemy and heals self
 fireball: 6 mn 24 int: deals great damage
-recall: 8 mn 26 int: sends you to town, usable out of combat
+recall: 8 mn 24 int: sends you to town, usable out of combat
 
 
 
@@ -165,3 +165,26 @@ Victory:
 Once you believe yourself to be ready, type "challenge" in Xian City and you will seek out Wujin for a duel. You cannot flee from this duel. 
 
 If you defeat Wujin in combat, then you win the game! 
+
+
+
+Please send me any suggestions for improving or balancing the game and I will take them into account for the next game update! 
+
+
+
+Current suggestions: 
+
+1. Make the game not allow you to train a skill or spell you already know. 
+2. Make the prompt show if you are in the training hall, or exploring the world, or in levelling up, etc. 
+3. Shorten commands that are frequently used: n/s/e/w, h for hunt, sc for score. 
+4. Allow equipping items in one line "equip cloth gloves" instead of having to open the equip dialogue. 
+5. Allow casting spells in one line. 
+6. More flavour text for zones. 
+7. "Clever" interpretation of commands (can understand shortcuts, etc.). 
+
+
+
+
+Extensions: 
+
+1. 
