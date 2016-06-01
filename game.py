@@ -102,10 +102,10 @@ class Character(object):
     def Look(self):
         print("\n" + self.room.name + "\n")
         print(self.room.desc + "\n")
-        print("Available exits:" + "\n")
+        print("Available exits:")
         PrintOD(self.room.exitrooms)
         self.statusbar = UpdateStatusBar(self.condition)
-        print(self.statusbar)
+        print("\n" + self.statusbar)
 
     def Score(self):
         print("Your attributes are:")
@@ -156,14 +156,14 @@ class Character(object):
         print("\nRefer to items.csv for detailed information.")
         print("What do you wish to buy? Type the item name, or type 'exit' to exit.")
         print("If you wish to sell, type 'sell'.")
-        shopping_choice = input("> ")
+        shopping_choice = input("Shopping > ")
         if (shopping_choice.lower() == "exit"):
             print("You leave the shop.")
             return(None)
         if (shopping_choice.lower() == "sell"):
             print("Which item in your inventory would you sell?")
             print(self.inventory)
-            sale_item = input("> ")
+            sale_item = input("Shopping > ")
             if (sale_item not in self.inventory):
                 print("You do not have that.")
                 print("You leave the shop.")
@@ -200,7 +200,7 @@ class Character(object):
         print("Zhang-Fei the mighty giant stands ready to train you in the martial arts.")
         print("Zhuge-Liang the brilliant recluse stands ready to instruct you in high sorcery.")
         print("Do you wish to learn a skill or a spell? [skill, spell]")
-        train_choice = input("> ").lower()
+        train_choice = input("Training > ").lower()
         if (train_choice not in ["skill","spell"]):
             print("You must choose a skill or a spell. Come back again.")
             return(None)
@@ -208,7 +208,7 @@ class Character(object):
             print("You may learn the following skills. Choose one.")
             print(skills_req.keys())
             print("Note: if you learn a skill you already know you will not be refunded!")
-            train_skillchoice = input("> ").lower()
+            train_skillchoice = input("Training > ").lower()
             if (train_skillchoice not in skills_req.keys()):
                 print("No such skill.")
                 return(None)
@@ -237,7 +237,7 @@ class Character(object):
             print("You may learn the following spells. Choose one.")
             print(spells_req.keys())
             print("Note: if you learn a spell you already know you will not be refunded!")
-            train_spellchoice = input("> ").lower()
+            train_spellchoice = input("Training > ").lower()
             if (train_spellchoice not in spells_req.keys()):
                 print("No such spell.")
                 return(None)
@@ -248,7 +248,7 @@ class Character(object):
                 print("You need " + str(train_spellreq) + " intelligence to train in this skill. Come back again.")
                 return(None)
             elif (self.gold < train_cost):
-                print("You need " + (train_cost) + " gold to train in this skill. Come back again.")
+                print("You need " + str(train_cost) + " gold to train in this skill. Come back again.")
                 return(None)
             else:
                 if (train_spellchoice in self.spells):
@@ -373,7 +373,7 @@ class Character(object):
             # Determine attack roll.
             weaponroll = random.randint(self.equipbonus["weaponmin"],self.equipbonus["weaponmax"])
             base_attack = 5 + self.secondary["damroll"] + self.buffs["damroll"]
-            attackroll = round(1.25 * (weaponroll + base_attack))
+            attackroll = round(1.125 * (weaponroll + base_attack))
             # Determine enemy defence roll.
             base_defence = max(0, Enemy.defence - Enemy.debuffs["defence"])
             defroll_min = round(0.25 * base_defence)
@@ -519,7 +519,7 @@ class Character(object):
             return(None)
         else:
             self.condition["sta"] -= 8
-            flurries = min(5, round(self.secondary["speed"] / 4) + 1)
+            flurries = min(5, round(self.secondary["speed"] / 3) + 1)
             print("You begin a flurry of " + str(flurries) + " consecutive strikes.")
             for _ in range(flurries):
                 weaponroll = random.randint(self.equipbonus["weaponmin"],self.equipbonus["weaponmax"])
@@ -634,7 +634,7 @@ class Character(object):
             print("You raise a clenched fist, and blast your victim with searing flames!")
             print("You deal " + str(blast_damage) + " damage.")
             Enemy.hp -= blast_damage
-            self.condition["mn"] -= 3
+            self.condition["mn"] -= 1
             return(None)
 
     def Vampiric(self,Enemy):
@@ -687,11 +687,14 @@ class Character(object):
         attribute_chosen = False
         while (attribute_chosen == False):
             print("Please choose an attribute from the list given!")
-            selected_attribute = input("> ").lower()
+            selected_attribute = input("Level Up > ").lower()
             if (selected_attribute not in self.attributes):
                 continue
             else:
                 self.attributes[selected_attribute] += levelincrease[selected_attribute]
+                self.attributes["maxhp"] += 2
+                self.attributes["maxsta"] += 2
+                self.attributes["maxmn"] += 2
                 self.attributes["level"] += 1
                 self.attributes["exp"] = 0
                 self.attributes["tnl"] = self.attributes["level"] * 10
@@ -716,19 +719,19 @@ class Character(object):
             self.statusbar = UpdateStatusBar(self.condition)
             enemy_fractionhp = Enemy.hp / Enemy.maxhp
             if (enemy_fractionhp > 0.75):
-                enemy_injury = "Enemy: mostly healthy"
+                enemy_injury = Enemy.name + ": mostly healthy"
             elif (enemy_fractionhp > 0.5):
-                enemy_injury = "Enemy: injured"
+                enemy_injury = Enemy.name + ": injured"
             elif (enemy_fractionhp > 0.25):
-                enemy_injury = "Enemy: heavily wounded"
+                enemy_injury = Enemy.name + ": heavily wounded"
             else:
-                enemy_injury = "Enemy: nearly dead"
+                enemy_injury = Enemy.name + ": nearly dead"
             prompt = self.statusbar + enemy_injury
             print(prompt)
             print("\nYou may 'flee' or type in the name of a skill or spell to use.")
             print(self.skills)
             print(self.spells)
-            combat_move = input("> ").lower()
+            combat_move = input("Fighting > ").lower()
             # Get player input text and show player available commands:
             # Flee, list of skills, and list of spells.
             if (combat_move == "flee"):
@@ -824,7 +827,7 @@ class Character(object):
         else:
             print("Please choose an item from your inventory to equip:")
             print(self.inventory)
-            to_equip = input("> ").lower()
+            to_equip = input("Equipping > ").lower()
             self.EquipItem(to_equip)
             return(None)
 
@@ -837,7 +840,7 @@ class Character(object):
         print("This is the list of all non-combat spells:")
         print(spells_noncombat)
         print("Choose a spell to cast.")
-        cast_spell = input("> ")
+        cast_spell = input("Casting > ")
         # Check that the player has learnt the spell.
         if (cast_spell not in self.spells):
             print("You do not know that spell!")
@@ -944,11 +947,11 @@ class Mob(object):
         if (Player.equipment["offhand"] == None):
             pass
         else:
-            enemy_penetration = 0.5 * self.attack + 0.5 * self.speed
+            enemy_penetration = 0.5 * (self.attack - self.debuffs["attack"]) + 0.5 * (self.speed - self.debuffs["speed"])
             blockvalue = round(Player.posture * (Player.secondary["damroll"] + Player.equipbonus["block"] + Player.buffs["block"]))
-            blockroll_min = round(0.25 * blockvalue)
+            blockroll_min = round(0.6 * blockvalue)
             blockroll = random.randint(blockroll_min,blockvalue)
-            if (self.attack > (2 * blockroll + blockroll_min) and Player.posture > 0):
+            if (enemy_penetration > (2 * blockroll + blockroll_min) and Player.posture > 0):
                 # Player shield breaks.
                 print("With a decisive blow, " + self.name + " cleaves your shield in twain!")
                 Player.equipment["offhand"] = None
@@ -1046,36 +1049,58 @@ with open("map.csv","r") as mapfile:
 # print(roomexits)
 # print(roomlist)
 # sys.exit()
+City_desc = "Xian City is a bustling metropolis of merchants, labourers, nobles and \n" +\
+"craftsmen. Here, you can acquire anything, should you have the coin. \n" +\
+"Yolchuyev's Armoury stands grandly in the main bazaar, and within you \n" +\
+"may find the finest armaments in the Empire. You may also receive training \n" +\
+"from the masters of battle and sorcery at Lijun's Academy, or rest safely \n" +\
+"in The Overlord's Arms. Yining, proprietor of that inn, personally ensures \n" +\
+"the safety of his guests."
 City = Town(
     "Xian City",
-    "You are in Xian City. You may train and shop here."
+    City_desc
     )
 City.mobs.append("a giant rat")
 
+Steppes_desc = "Here lie the Steppes of the Mongols, some of the finest horsemen \n" +\
+"in the known world. It is a harsh and unyielding plain, with little vegetation \n" +\
+"and bone-biting cold. Here you will find little respite."
 Steppes = Room(
     "Cold Steppes",
-    "You are in the cold steppes. You may hunt here."
+    Steppes_desc
     )
 Steppes.mobs.append("a tundra leopard")
 Steppes.mobs.append("a savage horseman")
 
+Delta_desc = "This is the Pearl River Delta, a rich and fertile land criss-crossed \n" +\
+"with irrigated rice farms. Diligent farmers and tradesmen ply their trade here, \n" +\
+"and its importance to the Empire has made it well-patrolled by soldiers. This \n" +\
+"area is relatively safe, with only the odd goblin or vermin preying on the \n" +\
+"unwary."
 Delta = Room(
     "Pearl River Delta",
-    "You are in the Pearl River Delta. You may hunt here."
+    Delta_desc
     )
 Delta.mobs.append("a mottled goblin")
 Delta.mobs.append("a giant rat")
 
+Coast_desc = "This is the Coast of the Yellow Sea, a traditional centre of maritime \n" +\
+"trade. Ships sail frequently across the littoral waters, and the roads are well-\n" +\
+"maintained for the many trading caravans headed to and from the ports."
 Coast = Room(
     "Coast of the Yellow Sea",
-    "You are at the coast of the Yellow Sea. You may hunt here."
+    Coast_desc
     )
 Coast.mobs.append("a mangy brigand")
 Coast.mobs.append("a feral hyena")
 
+Plateau_desc = "The Highland Plateau is a forbidding, pitiless land. Settled by the \n" +\
+"hardy mountaineering people of Tibet, it is notoriously difficult to navigate. \n" +\
+"The Empire's hold here is tenuous at best. Dangerous beasts and skilled outlaw \n" +\
+"hunters stalk the craggy heights. The thin air here only enhances the danger."
 Plateau = Room(
     "Highland Plateau",
-    "You are at the highland plateau. You may hunt here."
+    Plateau_desc
     )
 Plateau.mobs.append("the highland ravager")
 Plateau.mobs.append("an elite mountain ranger")
@@ -1393,16 +1418,24 @@ while (True):
     rounds_taken += 1
     command = input("> ").lower()
     player.UpdateEquipBonus()
-    if (command in cardinal_directions):
+    if (command in cardinal_directions or command in ["n","s","e","w"]):
+        if (command == "n"):
+            command = "north"
+        elif (command == "s"):
+            command = "south"
+        elif (command == "w"):
+            command = "west"
+        elif (command == "e"):
+            command = "east"
         # Player is moving.
         player.Move(command)
     elif (command == "rest"):
         player.Rest()
-    elif (command == "hunt"):
+    elif (command == "hunt" or command == "h"):
         player.Hunt()
-    elif (command == "look"):
+    elif (command == "look" or command == "l"):
         player.Look()
-    elif (command == "score"):
+    elif (command == "score" or command == "sc"):
         player.Score()
     elif (command == "inv"):
         print("You have the following items:")
@@ -1416,7 +1449,7 @@ while (True):
         player.Shop()
     elif (command == "train"):
         player.Train()
-    elif (command == "cast"):
+    elif (command == "cast" or command == "c"):
         player.Cast()
     elif (command == "challenge"):
         player.Challenge()

@@ -1,10 +1,10 @@
 mob_name,hp,defence,attack,speed,expgiven,loot,moveset,moveprob
 a mottled goblin,25,3,9,5,4,12,Attack,1
 a giant rat,15,2,8,8,3,8,Attack,1
-a mangy brigand,45,8,15,8,8,24,Attack,1
-a feral hyena,35,5,15,12,6,20,Attack,1
-a tundra leopard,55,10,21,24,12,44,Attack,1
-a savage horseman,75,12,18,25,16,64,Attack,1
-the highland ravager,100,15,25,28,26,84,Attack,1
-an elite mountain ranger,125,22,25,21,32,104,Attack,1
+a mangy brigand,45,8,15,8,10,24,Attack,1
+a feral hyena,35,5,15,12,8,20,Attack,1
+a tundra leopard,55,10,21,24,18,44,Attack,1
+a savage horseman,75,12,18,25,22,64,Attack,1
+the highland ravager,100,15,25,28,40,84,Attack,1
+an elite mountain ranger,125,22,25,21,55,104,Attack,1
 Wujin the renegade blademaster,250,30,40,30,200,500,Attack,1

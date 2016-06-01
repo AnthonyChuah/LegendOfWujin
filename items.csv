@@ -20,11 +20,11 @@ mail leggings,armour,legs,0,0,4,0,40
 plate leggings,armour,legs,0,0,5,0,130
 sandals,armour,feet,0,0,1,0,8
 shoes,armour,feet,0,0,2,0,12
-boots,armour,feet,0,0,3,0,20
+boots,armour,feet,0,0,3,0,25
 reinforced boots,armour,feet,0,0,4,0,80
 cloth gloves,armour,hands,0,0,1,0,8
 leather gloves,armour,hands,0,0,2,0,12
-leather gauntlets,armour,hands,0,0,3,0,20
+leather gauntlets,armour,hands,0,0,3,0,25
 mail gauntlets,armour,hands,0,0,4,0,80
 wooden buckler,shield,offhand,0,0,0,5,10
 bronze buckler,shield,offhand,0,0,0,7,20

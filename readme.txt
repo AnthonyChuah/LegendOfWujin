@@ -172,16 +172,19 @@ Please send me any suggestions for improving or balancing the game and I will ta
 
 
 
-Current suggestions: 
+Changelog: 
 
-1. Make the game not allow you to train a skill or spell you already know. 
-2. Make the prompt show if you are in the training hall, or exploring the world, or in levelling up, etc. 
-3. Shorten commands that are frequently used: n/s/e/w, h for hunt, sc for score. 
-4. Allow equipping items in one line "equip cloth gloves" instead of having to open the equip dialogue. 
-5. Allow casting spells in one line. 
-6. More flavour text for zones. 
-7. "Clever" interpretation of commands (can understand shortcuts, etc.). 
-
+Implemented 1. Make the game not allow you to train a skill or spell you already know. 
+Implemented 2. Make the prompt show if you are in the training hall, or exploring the world, or in levelling up, etc. 
+Implemented 3. Shorten commands that are frequently used: n/s/e/w, h for hunt, sc for score. 
+Decided not to 4. Allow equipping items in one line "equip cloth gloves" instead of having to open the equip dialogue. 
+Decided not to 5. Allow casting spells in one line. 
+Implemented 6. More flavour text for zones. 
+Implemented 7. "Clever" interpretation of commands (can understand shortcuts, etc.). 
+Balance 8. Gameplay balance by increasing exp given by higher level mobs. 
+Bugfix 9. Fixed Blast so that it uses 1 mind instead of 3. 
+Implemented 10. Gameplay balance by reducing likelihood of shield being destroyed by mobs. 
+Bugfix 11. Added coercion to string for the message that comes when you do not have the gold for training a spell. 
 
 
 
