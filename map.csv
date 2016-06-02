@@ -1,6 +1,8 @@
-,Xian City,Cold Steppes,Pearl River Delta,Coast of the Yellow Sea,Highland Plateau
-Xian City,,north,south,east,west
-Cold Steppes,south,,,,
-Pearl River Delta,north,,,,
-Coast of the Yellow Sea,west,,,,
-Highland Plateau,east,,,,
+,Xian City,Cold Steppes,Pearl River Delta,Coast of the Yellow Sea,Highland Plateau,Sky-Burial Ridge,The Misty Jungle
+Xian City,,north,south,east,west,,
+Cold Steppes,south,,,,,,
+Pearl River Delta,north,,,,,,south
+Coast of the Yellow Sea,west,,,,,,
+Highland Plateau,east,,,,,west,
+Sky-Burial Ridge,,,,,,,
+The Misty Jungle,,,north,,,,

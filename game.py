@@ -151,8 +151,14 @@ class Character(object):
         if (self.room.is_town == False):
             print("You can only shop in town.")
             return(None)
-        print("You browse the list of available items:\n")
-        print(itemstable.keys())
+        print("You enter Yolchuyev's Armoury, the finest arms dealership in the city.")
+        print("Nihad Yolchuyev, the proprietor, grins widely and says,")
+        print("'Adventurer! How are you Adventurer?'")
+        print("You ask rhetorically, 'I am well, but can you provide what I need?'")
+        print("Nihad chortles and says, 'Come on! It is not a problem! Yolchuyev can do")
+        print("everything!' He shows you his impressive selection of wares.\n")
+        print("You browse the list of available items:")
+        print(list(itemstable.keys()))
         print("\nRefer to items.csv for detailed information.")
         print("What do you wish to buy? Type the item name, or type 'exit' to exit.")
         print("If you wish to sell, type 'sell'.")
@@ -206,8 +212,7 @@ class Character(object):
             return(None)
         elif (train_choice == "skill"):
             print("You may learn the following skills. Choose one.")
-            print(skills_req.keys())
-            print("Note: if you learn a skill you already know you will not be refunded!")
+            print(list(skills_req.keys()))
             train_skillchoice = input("Training > ").lower()
             if (train_skillchoice not in skills_req.keys()):
                 print("No such skill.")
@@ -235,7 +240,7 @@ class Character(object):
         else:
             # The train_choice was spell.
             print("You may learn the following spells. Choose one.")
-            print(spells_req.keys())
+            print(list(spells_req.keys()))
             print("Note: if you learn a spell you already know you will not be refunded!")
             train_spellchoice = input("Training > ").lower()
             if (train_spellchoice not in spells_req.keys()):
@@ -264,9 +269,12 @@ class Character(object):
     # If in town, rest should restore fully. If not, there is
     # a risk of enemy attack and only half restoration. 
     def Rest(self):
-        print("You take some time to rest.")
         if self.room.is_town == True:
             if self.gold >= 5:
+                print("You enter The Overlord's Arms, where you are personally welcomed by the proprietor, Yining.")
+                print("'How are you?' He asks. You reply, 'I'm good, thank you. How are you?'")
+                print("'Equally good.' Responds Yining. You complete the ritual by nodding sagely and saying,")
+                print("'Becomes dangerous.' Yining nods gravely and shows you to your chambers.")
                 print("You spend 5 gold to rest in town, and recover fully.")
                 self.gold -= 5
                 self.condition = {
@@ -827,7 +835,7 @@ class Character(object):
         else:
             print("Please choose an item from your inventory to equip:")
             print(self.inventory)
-            to_equip = input("Equipping > ").lower()
+            to_equip = input("Equipping > ")
             self.EquipItem(to_equip)
             return(None)
 
@@ -1097,7 +1105,8 @@ Coast.mobs.append("a feral hyena")
 Plateau_desc = "The Highland Plateau is a forbidding, pitiless land. Settled by the \n" +\
 "hardy mountaineering people of Tibet, it is notoriously difficult to navigate. \n" +\
 "The Empire's hold here is tenuous at best. Dangerous beasts and skilled outlaw \n" +\
-"hunters stalk the craggy heights. The thin air here only enhances the danger."
+"hunters stalk the craggy heights. The thin air here only enhances the danger. \n" +\
+"Further west you may climb a ridge, from which you might not be able to return."
 Plateau = Room(
     "Highland Plateau",
     Plateau_desc
@@ -1105,12 +1114,39 @@ Plateau = Room(
 Plateau.mobs.append("the highland ravager")
 Plateau.mobs.append("an elite mountain ranger")
 
+Ridge_desc = "The view from atop the Sky-Burial Ridge is truly exhilarating. Up here, \n" +\
+"the air is dizzyingly thin, and precarious mountain cliffs and ridges stretch \n" +\
+"away into the horizon. Not far away, some eagles feed on the corpse of a Tibetan \n" +\
+"upper-caste priest - only those are worthy of the Sky Burial. The ominous sound \n" +\
+"of thunder sets your nerves on edge."
+Ridge = Room(
+    "Sky-Burial Ridge",
+    Ridge_desc
+    )
+Ridge.mobs.append("the highland ravager")
+Ridge.mobs.append("an elite mountain ranger")
+Ridge.mobs.append("the sinister thunder demon")
+
+Jungle_desc = "Here, on the edges of civilization, you brave the terrors of the Southern \n" +\
+"jungles. The Misty Jungle is flush with dangerous savages keen to slay interlopers, \n" +\
+"especially those from the Empire. Given the constant border skirmishes with the \n" +\
+"Empire, perhaps that might be understandable. If the savages do not kill you, \n" +\
+"perhaps the wildlife will."
+Jungle = Room(
+    "The Misty Jungle",
+    Jungle_desc
+    )
+Jungle.mobs.append("a monstrous tiger")
+Jungle.mobs.append("a hostile jungle headhunter")
+
 room_dict = {
     "Xian City": City,
     "Cold Steppes": Steppes,
     "Pearl River Delta": Delta,
     "Coast of the Yellow Sea": Coast,
-    "Highland Plateau": Plateau
+    "Highland Plateau": Plateau,
+    "Sky-Burial Ridge": Ridge,
+    "The Misty Jungle": Jungle
     }
 
 # print(room_dict)
@@ -1391,10 +1427,10 @@ player = Character(player_name)
 
 # Debug mode: make character very high stats and high gold.
 if (debugcode == "debug"):
-    player.gold = 5000
+    player.gold = 10000
     player.attributes["str"] = 34
     player.attributes["dex"] = 34
-    player.attributes["int"] = 24
+    player.attributes["int"] = 34
     player.attributes["maxhp"] = 100
     player.attributes["maxmn"] = 80
     player.attributes["maxsta"] = 80

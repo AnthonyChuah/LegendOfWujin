@@ -8,24 +8,32 @@ axe,weapon,mainhand,2,11,0,0,115
 da dao,weapon,mainhand,3,12,0,0,160
 jian,weapon,mainhand,5,12,0,0,225
 meteor hammer,weapon,mainhand,7,11,0,0,275
+Monkey King Bar,weapon,mainhand,9,13,0,0,1500
+Green Dragon Crescent Blade,weapon,mainhand,7,15,0,0,1500
+Gou-Jian Sword,weapon,mainhand,8,14,0,0,1500
+Heavenly Halberd,weapon,mainhand,10,12,0,0,1500
 cloth tunic,armour,body,0,0,3,0,20
 leather jerkin,armour,body,0,0,4,0,40
 ring mail shirt,armour,body,0,0,5,0,65
 chain mail shirt,armour,body,0,0,6,0,100
 light platemail,armour,body,0,0,7,0,150
 heavy platemail,armour,body,0,0,8,0,250
+Imperial Jade Breastplate,armour,body,0,0,9,0,1000
 cloth trousers,armour,legs,0,0,2,0,10
 leather leggings,armour,legs,0,0,3,0,20
 mail leggings,armour,legs,0,0,4,0,40
 plate leggings,armour,legs,0,0,5,0,130
+Qilin Greaves,armour,legs,0,0,6,0,500
 sandals,armour,feet,0,0,1,0,8
 shoes,armour,feet,0,0,2,0,12
 boots,armour,feet,0,0,3,0,25
 reinforced boots,armour,feet,0,0,4,0,80
+Draconic Stompers,armour,feet,0,0,5,0,320
 cloth gloves,armour,hands,0,0,1,0,8
 leather gloves,armour,hands,0,0,2,0,12
 leather gauntlets,armour,hands,0,0,3,0,25
 mail gauntlets,armour,hands,0,0,4,0,80
+Wu-Song Fists,armour,hands,0,0,5,0,320
 wooden buckler,shield,offhand,0,0,0,5,10
 bronze buckler,shield,offhand,0,0,0,7,20
 wooden shield,shield,offhand,0,0,0,8,30
@@ -34,3 +42,4 @@ bronze shield,shield,offhand,0,0,0,10,60
 steel buckler,shield,offhand,0,0,0,12,80
 iron shield,shield,offhand,0,0,0,13,100
 steel shield,shield,offhand,0,0,0,15,150
+Aegis of Temujin,shield,offhand,0,0,0,16,600
