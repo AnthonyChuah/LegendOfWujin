@@ -45,6 +45,14 @@ quit: quits the game
 
 When you are in combat, the list of commands is strongly restricted. You may only follow the prompts in the combat text. 
 
+List of shortcuts: 
+
+n/s/e/w: north/south/east/west
+l: look
+h: hunt
+sc: score
+c: cast
+
 List of combat commands:
 
 flee: attempts to flee
@@ -55,7 +63,7 @@ flee: attempts to flee
 
 Navigation
 
-The game features 5 rooms. See "map.jpg" for a map. Xian City is the central hub connecting all 4 wilderness zones. Each zone connects only to Xian City. 
+The game features 5 rooms. Xian City is the central hub connecting all 4 wilderness zones. Each zone connects only to Xian City. 
 
 South: Pearl River Delta: lowest-level area. 
 East: Coast of the Yellow Sea: second-lowest-level area. 
@@ -108,7 +116,7 @@ When you buy an item, it goes into your Inventory. Type "equip" to initiate the 
 
 Training: 
 
-You can train in town. Type "train" when in Xian City to initiate the training process. Follow the instructions on screen. 
+You can train in town. Type "train" when in Xian City to initiate the training process. Follow the instructions on screen. If you type something that is not recognized by the training process, then it will put you out of the training process. You may try again by entering "train" again. 
 
 You start with only the three basic attack skills: [atk, def, str]. To learn more, you must train. 
 
