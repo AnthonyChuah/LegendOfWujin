@@ -63,12 +63,17 @@ flee: attempts to flee
 
 Navigation
 
-The game features 5 rooms. Xian City is the central hub connecting all 4 wilderness zones. Each zone connects only to Xian City. 
+The game features 7 "rooms". Xian City is the central hub connecting 4 wilderness rooms.
 
 South: Pearl River Delta: lowest-level area. 
 East: Coast of the Yellow Sea: second-lowest-level area. 
-North: Cold Steppes: second-highest-level area. 
-West: Highland Plateau: highest-level area. 
+North: Cold Steppes: third area. 
+West: Highland Plateau: fourth area. 
+
+Further afield, there are 2 more wilderness rooms which are very dangerous.
+
+West of Highland Plateau: Sky-Burial Ridge: highest level area from which egress is possible only through use of the Recall spell; features highest-level mob, the sinister thunder demon.
+South of Pearl River Delta: The Misty Jungle: very high level area featuring monsters more powerful than Highland Plateau's.
 
 All your commands should be in lower case, even though the game should be able to understand upper case versions. 
 
@@ -104,7 +109,7 @@ To Next Level: the number of exp needed to gain the next level.
 
 Shopping: 
 
-You can shop in town. Type "shop" when in Xian City to initiate the shopping process. Follow the instructions on screen. For a list of items and their statistics, see "items.jpg". 
+You can shop in town. Type "shop" when in Xian City to initiate the shopping process. Follow the instructions on screen. For a list of items and their statistics, see "items.csv". 
 
 
 
