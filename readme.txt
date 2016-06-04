@@ -182,20 +182,22 @@ Please send me any suggestions for improving or balancing the game and I will ta
 
 Changelog: 
 
-Implemented 1. Make the game not allow you to train a skill or spell you already know. 
-Implemented 2. Make the prompt show if you are in the training hall, or exploring the world, or in levelling up, etc. 
-Implemented 3. Shorten commands that are frequently used: n/s/e/w, h for hunt, sc for score. 
+Implemented 1. Made the game not allow you to train a skill or spell you already know. 
+Implemented 2. Made the prompt show if you are in the training hall, or exploring the world, or in levelling up, etc. 
+Implemented 3. Shortened commands that are frequently used: n/s/e/w, h for hunt, sc for score. 
 Decided not to 4. Allow equipping items in one line "equip cloth gloves" instead of having to open the equip dialogue. 
 Decided not to 5. Allow casting spells in one line. 
 Implemented 6. More flavour text for zones. 
-Implemented 7. "Clever" interpretation of commands (can understand shortcuts, etc.). 
 Balance 8. Gameplay balance by increasing exp given by higher level mobs. 
 Bugfix 9. Fixed Blast so that it uses 1 mind instead of 3. 
 Implemented 10. Gameplay balance by reducing likelihood of shield being destroyed by mobs. 
 Bugfix 11. Added coercion to string for the message that comes when you do not have the gold for training a spell. 
+Bugfix 12. Fixed function call Character.Room.EnemyEncounter() to Character.EnemyEncounter () inside Character.Rest() function.
+Implemented 13. Two more zones, more mobs, several legendary items, and increased strength of boss.
+Implemented 14. Balanced high-level mobs exp given to match the difficulty and time requirement.
 
 
+Future Features List:
 
-Extensions: 
-
-1. 
+1. Make generalized acceptance of any substring of a command instead of hard-coded shortcuts.
+2. Make a GUI with status bar, inventory, equipment, location all displayed along with the console.

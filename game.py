@@ -307,7 +307,7 @@ class Character(object):
                     self.gold -= 5
                 else:
                     print("Your rest was interrupted by an enemy.")
-                    self.room.EnemyEncounter()
+                    self.EnemyEncounter()
             else:
                 print("You do not have enough gold for camping supplies!")
                 return(None)
