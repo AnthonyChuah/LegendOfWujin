@@ -2,6 +2,7 @@ import random
 import math
 import csv
 import sys
+import re
 from collections import OrderedDict
 
 # Method for printing ordered dictionary.
@@ -30,6 +31,35 @@ def UpdateStatusBar(condition_dict):
         "> "
     ])
     return(statusbar)
+
+def InterpretInput(input_string,list_of_strings):
+    # If it directly matches, skip everything else and return the element string.
+    for element in list_of_strings:
+        if (input_string == element):
+            return(element)
+    # Else continue with function.
+    # Returns a list of unique substrings that are short-forms for the strings.
+    maxlength = 0
+    list_of_substrings = list()
+    regex = "^" + input_string + ".*$"
+    count_matches = 0
+    matches_list = list()
+    for ielement in list_of_strings:
+        regex_search = re.search(regex,ielement)
+        if (bool(regex_search)):
+            matches_list.append(ielement)
+            count_matches += 1
+            # print("Matches now set to: " + str(count_matches))
+    if (count_matches == 0):
+        print("Your input did not match any available option.")
+        return(None)
+    elif (count_matches >= 2):
+        # This means that player input matched more than one string.
+        print("Your input was ambiguous, matching 2 or more options.")
+        return(None)
+    else:
+        # Only a single match. This means they chose that element.
+        return(matches_list[0])
 
 ### SECTION_OBJECTS ###
 class Character(object):
@@ -155,18 +185,20 @@ class Character(object):
         print("Nihad Yolchuyev, the proprietor, grins widely and says,")
         print("'Adventurer! How are you Adventurer?'")
         print("You ask rhetorically, 'I am well, but can you provide what I need?'")
-        print("Nihad chortles and says, 'Come on! It is not a problem! Yolchuyev can do")
+        print("Nihad chortles and says, 'Come on! It is not a problem! Java can do")
         print("everything!' He shows you his impressive selection of wares.\n")
         print("You browse the list of available items:")
+        item_list = list(itemstable.keys())
         print(list(itemstable.keys()))
         print("\nRefer to items.csv for detailed information.")
         print("What do you wish to buy? Type the item name, or type 'exit' to exit.")
         print("If you wish to sell, type 'sell'.")
-        shopping_choice = input("Shopping > ")
-        if (shopping_choice.lower() == "exit"):
+        shopping_choice_raw = input("Shopping > ")
+        shopping_choice = InterpretInput(shopping_choice_raw,item_list)
+        if (shopping_choice == "exit"):
             print("You leave the shop.")
             return(None)
-        if (shopping_choice.lower() == "sell"):
+        if (shopping_choice == "sell"):
             print("Which item in your inventory would you sell?")
             print(self.inventory)
             sale_item = input("Shopping > ")
@@ -181,7 +213,7 @@ class Character(object):
                 self.gold += sale_value
                 print("You leave the shop.")
                 return(None)
-        if (shopping_choice not in itemstable.keys()):
+        if (shopping_choice not in item_list):
             print("That item is not in the list of available items.")
             print("You leave the shop.")
             return(None)
@@ -739,7 +771,10 @@ class Character(object):
             print("\nYou may 'flee' or type in the name of a skill or spell to use.")
             print(self.skills)
             print(self.spells)
-            combat_move = input("Fighting > ").lower()
+            all_moves = ["flee"] + self.skills + self.spells
+            # print("All your available moves:")
+            # print(all_moves)
+            combat_move = InterpretInput(input("Fighting > ").lower(),all_moves)
             # Get player input text and show player available commands:
             # Flee, list of skills, and list of spells.
             if (combat_move == "flee"):
@@ -805,7 +840,7 @@ class Character(object):
             print("You delve into intense study of the martial arts to perfect yourself.")
             print("But soon, you begin to lose your grasp on sanity amidst the treacherous court politics.")
             print("In time, you will become a renegade, and the lands will then call for a hero to destroy you...")
-            print("Congratulations on winning the game!")
+            print("Congratulations on winning the game!\n")
             sys.exit()
         # Gain loot.
         print("You loot " + str(Enemy.loot) + " gold coins.")
@@ -835,7 +870,7 @@ class Character(object):
         else:
             print("Please choose an item from your inventory to equip:")
             print(self.inventory)
-            to_equip = input("Equipping > ")
+            to_equip = InterpretInput(input("Equipping > "),self.inventory)
             self.EquipItem(to_equip)
             return(None)
 
@@ -847,8 +882,11 @@ class Character(object):
         print(self.spells)
         print("This is the list of all non-combat spells:")
         print(spells_noncombat)
+        print("You know the following non-combat spells:")
+        known_noncombat_spells = set(self.spells).intersection(spells_noncombat)
+        print(known_noncombat_spells)
         print("Choose a spell to cast.")
-        cast_spell = input("Casting > ")
+        cast_spell = InterpretInput(input("Casting > "),known_noncombat_spells)
         # Check that the player has learnt the spell.
         if (cast_spell not in self.spells):
             print("You do not know that spell!")
@@ -865,6 +903,7 @@ class Character(object):
         else:
             if (item not in self.inventory):
                 print("You do not have that item.")
+                print("Note: if you have two duplicate items, type the exact full name.")
                 return(None)
             else:
                 slot = itemstable[item][whichslot]
@@ -1447,31 +1486,59 @@ else:
     pass
 
 print("You begin your adventure in Xian City.")
+
+# List of commands:
+command_list = [
+    "north",
+    "south",
+    "east",
+    "west",
+    "rest",
+    "hunt",
+    "look",
+    "score",
+    "inv",
+    "eq",
+    "equip",
+    "shop",
+    "train",
+    "cast",
+    "challenge",
+    "quit"
+    ]
+
 # Game is a while loop that continues until player dies, or wins.
 rounds_taken = 0
 while (True):
     # rounds_taken records the number of rounds you took to win the game.
     rounds_taken += 1
-    command = input("> ").lower()
+    raw_command = input("> ").lower()
+    if (raw_command == "n"):
+        raw_command = "north"
+    elif (raw_command == "s"):
+        raw_command = "south"
+    elif (raw_command == "e"):
+        raw_command = "east"
+    elif (raw_command == "w"):
+        raw_command = "west"
+    elif (raw_command == "h"):
+        raw_command = "hunt"
+    elif (raw_command == "l"):
+        raw_command = "look"
+    elif (raw_command == "c"):
+        raw_command = "cast"
+    command = InterpretInput(raw_command,command_list)
     player.UpdateEquipBonus()
-    if (command in cardinal_directions or command in ["n","s","e","w"]):
-        if (command == "n"):
-            command = "north"
-        elif (command == "s"):
-            command = "south"
-        elif (command == "w"):
-            command = "west"
-        elif (command == "e"):
-            command = "east"
+    if (command in cardinal_directions):
         # Player is moving.
         player.Move(command)
     elif (command == "rest"):
         player.Rest()
-    elif (command == "hunt" or command == "h"):
+    elif (command == "hunt"):
         player.Hunt()
-    elif (command == "look" or command == "l"):
+    elif (command == "look"):
         player.Look()
-    elif (command == "score" or command == "sc"):
+    elif (command == "score"):
         player.Score()
     elif (command == "inv"):
         print("You have the following items:")
@@ -1485,7 +1552,7 @@ while (True):
         player.Shop()
     elif (command == "train"):
         player.Train()
-    elif (command == "cast" or command == "c"):
+    elif (command == "cast"):
         player.Cast()
     elif (command == "challenge"):
         player.Challenge()

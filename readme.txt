@@ -45,19 +45,25 @@ quit: quits the game
 
 When you are in combat, the list of commands is strongly restricted. You may only follow the prompts in the combat text. 
 
-List of shortcuts: 
+Shortcuts: 
 
-n/s/e/w: north/south/east/west
-l: look
-h: hunt
-sc: score
-c: cast
+In all situations except gaining a level, you do not need to type the full command. Useful examples of shortcuts:
+
+"h": "hunt"
+"i": "inventory"
+"r": "rest"
+"n": "north" (same for all other directions)
+
+When equipping items, you can select your desired item with a shortcut too: 
+For example, you have the items ["cloth gloves", "wooden buckler"]. When equipping, you can type "c" and it will know to equip "cloth gloves".
 
 List of combat commands:
 
 flee: attempts to flee
 [skill name]: uses skill corresponding to [skill name]
 [spell name]: uses spell corresponding to [spell name]
+
+Again, shortcuts can be used in combat too.
 
 
 
@@ -200,9 +206,9 @@ Bugfix 11. Added coercion to string for the message that comes when you do not h
 Bugfix 12. Fixed function call Character.Room.EnemyEncounter() to Character.EnemyEncounter () inside Character.Rest() function.
 Implemented 13. Two more zones, more mobs, several legendary items, and increased strength of boss.
 Implemented 14. Balanced high-level mobs exp given to match the difficulty and time requirement.
-
+Implemented 15. Fully-generalized acceptance of any substring of a command ("shortcut") in place of command.
 
 Future Features List:
 
-1. Make generalized acceptance of any substring of a command instead of hard-coded shortcuts.
+DONE 1. Make generalized acceptance of any substring of a command instead of hard-coded shortcuts.
 2. Make a GUI with status bar, inventory, equipment, location all displayed along with the console.
