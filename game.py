@@ -189,21 +189,21 @@ class Character(object):
         print("everything!' He shows you his impressive selection of wares.\n")
         print("You browse the list of available items:")
         item_list = list(itemstable.keys())
-        print(list(itemstable.keys()))
+        print(item_list)
         print("\nRefer to items.csv for detailed information.")
         print("What do you wish to buy? Type the item name, or type 'exit' to exit.")
         print("If you wish to sell, type 'sell'.")
         shopping_choice_raw = input("Shopping > ")
-        shopping_choice = InterpretInput(shopping_choice_raw,item_list)
-        if (shopping_choice == "exit"):
+        if (shopping_choice_raw == "exit"):
             print("You leave the shop.")
             return(None)
-        if (shopping_choice == "sell"):
+        if (shopping_choice_raw == "sell"):
             print("Which item in your inventory would you sell?")
             print(self.inventory)
-            sale_item = input("Shopping > ")
+            sale_item = InterpretInput(input("Shopping > "),self.inventory)
             if (sale_item not in self.inventory):
                 print("You do not have that.")
+                print("Note: if you have duplicate items please type its full name.")
                 print("You leave the shop.")
                 return(None)
             else:
@@ -213,6 +213,7 @@ class Character(object):
                 self.gold += sale_value
                 print("You leave the shop.")
                 return(None)
+        shopping_choice = InterpretInput(shopping_choice_raw,item_list)
         if (shopping_choice not in item_list):
             print("That item is not in the list of available items.")
             print("You leave the shop.")
